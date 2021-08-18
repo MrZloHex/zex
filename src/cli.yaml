@@ -1,0 +1,7 @@
+name: zex
+version: "1.0"
+author: <zlo.alex.it@gmail.com>
+about: Simple cli hex viewer
+args:
+    - file:
+        help: Sets file to view

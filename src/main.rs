@@ -1,7 +1,17 @@
 use clap::{App, load_yaml};
 
 use std::fs::{self, File};
-use std::io::Read;
+use std::io::{self, Read};
+use tui::{
+    backend::TermionBackend,
+    Terminal
+};
+use termion::{
+    async_stdin,
+    event::Key,
+    input::TermRead,
+    raw::IntoRawMode
+};
 
 fn get_file_as_byte_vec(filename: &str) -> Vec<u8> {
     let mut f = File::open(&filename).expect("no file found");
@@ -21,7 +31,23 @@ fn main() {
         panic!();
     };
 
-    for char in get_file_as_byte_vec(filename) {
-        println!("{:X}", char);
-    }
+    // for char in get_file_as_byte_vec(filename) {
+    //     println!("{:X}", char);
+    // }
+
+
+
+
+
+
+    // tui
+
+    let stdout = io::stdout().into_raw_mode()?;
+    let backend = TermionBackend::new(stdout);
+    let mut terminal = Terminal::new(backend)?;
+
+    let mut asi = async_stdin();
+
+    
+
 }

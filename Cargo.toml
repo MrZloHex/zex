@@ -8,3 +8,9 @@ edition = "2018"
 [dependencies.clap]
 version = "2.33.3"
 features = ["yaml"]
+
+[dependencies.tui]
+version = "0.16.0"
+
+[dependencies.termion]
+version = "1.5.6"

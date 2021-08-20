@@ -1,7 +1,7 @@
 use std::fs;
 use std::io::{self, Read};
 
-
+use super::list::StatefulList;
 
 pub struct File {
     filename: String,
@@ -9,19 +9,19 @@ pub struct File {
     length: usize,
 
     // TUI
-    // addresses: StatefulList<usize>
+    addresses: StatefulList<String>
 }
 
 impl File {
-    pub fn new(filename: &str) -> Self {
+    pub fn new(filename: &str) -> File {
         let data = File::get_file_data(filename);
-        let addresses = File::get_addresses_fom_length(&data);
+        let addresses:Vec<String> = File::get_addresses_fom_length(data.clone());
         File {
             filename: filename.to_string(),
             length: data.len(),
             data,
 
-            // addresses: StatefulList::new()
+            addresses: StatefulList::new(addresses)
         }
     }
 
@@ -34,100 +34,30 @@ impl File {
         buffer
     }
 
-    fn get_addresses_fom_length(data: &Vec<u8>) /*-> Vec<usize>*/ {
-        let mut addresses: Vec<usize> = Vec::new();
-        let data_length = (*data).len();
+    fn get_addresses_fom_length(data: Vec<u8>) -> Vec<String> {
+        let mut addresses: Vec<String> = Vec::new();
+        let data_length = data.len();
 
         for i in 0..data_length {
             if (i % 16) == 0 {
-                addresses.push(i);
+                addresses.push(format!("{:>0width$X}", i, width=8))
             }
         }
 
-        println!("{:X}", data_length);
-        for address in addresses {
-            print!("{:X}  ", address);
-        }
-    }
-}
+        addresses
 
-
-
-
-
-
-pub struct StatefulList<T> {
-    pub state: ListState,
-    pub items: Vec<T>,
-}
-
-impl<T> StatefulList<T> {
-    pub fn new(items: Vec<T>) -> StatefulList<T> {
-        StatefulList {
-            state: ListState::default(),
-            items,
-        }
     }
 
-    // pub fn next(&mut self) {
-    //     let i = match self.state.selected() {
-    //         Some(i) => {
-    //             if i >= self.items.len() - 1 {
-    //                 0
-    //             } else {
-    //                 i + 1
-    //             }
-    //         }
-    //         None => 0,
-    //     };
-    //     self.state.select(Some(i));
-    // }
-
-    // pub fn previous(&mut self) {
-    //     let i = match self.state.selected() {
-    //         Some(i) => {
-    //             if i == 0 {
-    //                 self.items.len() - 1
-    //             } else {
-    //                 i - 1
-    //             }
-    //         }
-    //         None => 0,
-    //     };
-    //     self.state.select(Some(i));
-    // }
-
-    // pub fn unselect(&mut self) {
-    //     self.state.select(None);
-    // }
-}
 
 
 
-#[derive(Debug, Clone)]
-pub struct ListState {
-    offset: usize,
-    selected: Option<usize>,
-}
 
-impl Default for ListState {
-    fn default() -> ListState {
-        ListState {
-            offset: 0,
-            selected: None,
-        }
-    }
-}
 
-impl ListState {
-    pub fn selected(&self) -> Option<usize> {
-        self.selected
-    }
 
-    pub fn select(&mut self, index: Option<usize>) {
-        self.selected = index;
-        if index.is_none() {
-            self.offset = 0;
-        }
+
+
+    // INTERFACE
+    pub fn get_adresses(&self) -> StatefulList<String> {
+        self.addresses.clone()
     }
 }

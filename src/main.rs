@@ -8,7 +8,8 @@ use tui::{
     backend::TermionBackend,
     Terminal,
     layout::{Constraint, Direction, Layout},
-    widgets::{Block, Borders}
+    widgets::{Block, Borders, List, ListItem},
+    text::Spans
 };
 use termion::{
     async_stdin,
@@ -20,6 +21,8 @@ use termion::{
 
 mod file;
 use file::File;
+
+mod list;
 
 
 
@@ -83,10 +86,23 @@ fn main() -> Result<(), io::Error> {
                 )
                 .split(chunks[0]);
 
+            let addresses: Vec<ListItem> = file.get_adresses()
+                .items
+                .iter()
+                .map(|i| {
+                    let lines = vec![Spans::from((*i).clone())];
+                    ListItem::new(lines)
+                })
+                .collect();
+
             let address_block = Block::default()
                 .title("Address")
                 .borders(Borders::ALL);
-            frame.render_widget(address_block, chunks[0]);
+
+            let address_list = List::new(addresses)
+                .block(address_block);
+            
+            frame.render_stateful_widget(address_list, chunks[0], &mut file.get_adresses().state);
 
             let raw_view_block = Block::default()
                 .title("HEX View")

@@ -9,7 +9,8 @@ use tui::{
     Terminal,
     layout::{Constraint, Direction, Layout},
     widgets::{Block, Borders, List, ListItem},
-    text::Spans
+    text::Spans,
+    style::{Color, Style}
 };
 use termion::{
     async_stdin,
@@ -35,7 +36,7 @@ fn main() -> Result<(), io::Error> {
         panic!();
     };
 
-    let file = File::new(filename);
+    let mut file = File::new(filename);
 
 
 
@@ -100,7 +101,11 @@ fn main() -> Result<(), io::Error> {
                 .borders(Borders::ALL);
 
             let address_list = List::new(addresses)
-                .block(address_block);
+                .block(address_block)
+                .highlight_style(
+                    Style::default()
+                        .fg(Color::Red)
+                );
             
             frame.render_stateful_widget(address_list, chunks[0], &mut file.get_adresses().state);
 
@@ -124,8 +129,14 @@ fn main() -> Result<(), io::Error> {
                 Key::Char('q') => {
                     terminal.clear()?;
                     return Ok(());
-                }
-                _ => (),
+                },
+                Key::Down => {
+                    file.next_address();
+                },
+                Key::Up => {
+                    file.previous_address();
+                },
+                _ => ()
             }
         }
     }

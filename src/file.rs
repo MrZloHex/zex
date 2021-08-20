@@ -50,14 +50,20 @@ impl File {
 
 
 
+    pub fn next_address(&mut self) {
+        self.addresses.next()
+    }
 
+    pub fn previous_address(&mut self) {
+        self.addresses.previous()
+    }
 
 
 
 
 
     // INTERFACE
-    pub fn get_adresses(&self) -> StatefulList<String> {
+    pub fn get_adresses(&mut self) -> StatefulList<String> {
         self.addresses.clone()
     }
 }

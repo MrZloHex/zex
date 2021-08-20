@@ -54,21 +54,35 @@ impl File {
         let mut hex: Vec<Vec<String>> = Vec::new();
         let mut row: Vec<String> = Vec::new();
         let mut i: u8 = 0;
+        let mut lines: usize = 0;
+        let last_items = data.len() % 16;
+        let full_lines = (data.len() - last_items) / 16;
 
         for byte in data {
-            if i < 15 {
+            if i < 16 {
                 row.push(format!("{:>0w$X}", *byte, w=2))
             }
-            else if i == 15 {
+            else if i == 16 {
                 i = 0;
                 hex.push(row.clone());
-                for _x in 0..15 {
+                for _x in 0..16 {
                     row.pop();
                 }
+                lines += 1;
+            }
+            if lines == full_lines && last_items == row.len() {
+                hex.push(row);
+                break;
             }
             i += 1;
+            
         } 
-        println!("{:?}", hex);
+        for row in &hex {
+            for item in row {
+                print!("{} ", *item);
+            }
+            print!("\n");
+        }
         hex
     }
 

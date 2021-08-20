@@ -78,9 +78,9 @@ fn main() -> Result<(), io::Error> {
                 .direction(Direction::Horizontal)
                 .constraints(
                     [
-                        Constraint::Percentage(10),
+                        Constraint::Length(12),
                         Constraint::Percentage(50),
-                        Constraint::Percentage(40)
+                        Constraint::Percentage(45)
                     ]
                     .as_ref()
                 )

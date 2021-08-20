@@ -35,12 +35,19 @@ impl File {
     }
 
     fn get_addresses_fom_length(data: &Vec<u8>) /*-> Vec<usize>*/ {
-        let mut addresses = Vec::new();
+        let mut addresses: Vec<usize> = Vec::new();
         let data_length = (*data).len();
-        addresses.insert(0, 123);
 
-        
-        
+        for i in 0..data_length {
+            if (i % 16) == 0 {
+                addresses.push(i);
+            }
+        }
+
+        println!("{:X}", data_length);
+        for address in addresses {
+            print!("{:X}  ", address);
+        }
     }
 }
 

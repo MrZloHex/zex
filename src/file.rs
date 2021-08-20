@@ -59,16 +59,16 @@ impl File {
         let full_lines = (data.len() - last_items) / 16;
 
         for byte in data {
-            if i < 16 {
-                row.push(format!("{:>0w$X}", *byte, w=2))
-            }
-            else if i == 16 {
+            if i == 16 {
                 i = 0;
                 hex.push(row.clone());
                 for _x in 0..16 {
                     row.pop();
                 }
                 lines += 1;
+            }
+            if i < 16 {
+                row.push(format!("{:>0w$X}", *byte, w=2));
             }
             if lines == full_lines && last_items == row.len() {
                 hex.push(row);

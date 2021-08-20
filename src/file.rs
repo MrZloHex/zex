@@ -40,7 +40,7 @@ impl File {
 
         for i in 0..data_length {
             if (i % 16) == 0 {
-                addresses.push(format!("{:>0width$X}", i, width=8))
+                addresses.push(format!("{:>0width$X}", i, width=10))
             }
         }
 

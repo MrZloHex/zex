@@ -68,6 +68,7 @@ impl File {
             }
             i += 1;
         } 
+        println!("{:?}", hex);
         hex
     }
 

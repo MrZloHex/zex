@@ -1,7 +1,7 @@
 use std::fs;
 use std::io::{self, Read};
 
-use super::list::StatefulList;
+use super::stateful_widgets::{StatefulList, StatefulTable};
 
 pub struct File {
     filename: String,
@@ -9,19 +9,22 @@ pub struct File {
     length: usize,
 
     // TUI
-    addresses: StatefulList<String>
+    addresses: StatefulList<String>,
+    hex_view: StatefulTable<String>
 }
 
 impl File {
     pub fn new(filename: &str) -> File {
         let data = File::get_file_data(filename);
-        let addresses:Vec<String> = File::get_addresses_fom_length(data.clone());
+        let addresses:Vec<String> = File::get_addresses_fom_length(&data);
+        let hex = File::get_hex_data(&data);
         File {
             filename: filename.to_string(),
             length: data.len(),
             data,
 
-            addresses: StatefulList::new(addresses)
+            addresses: StatefulList::new(addresses),
+            hex_view: StatefulTable::new(hex)
         }
     }
 
@@ -34,11 +37,10 @@ impl File {
         buffer
     }
 
-    fn get_addresses_fom_length(data: Vec<u8>) -> Vec<String> {
+    fn get_addresses_fom_length(data: &Vec<u8>) -> Vec<String> {
         let mut addresses: Vec<String> = Vec::new();
-        let data_length = data.len();
 
-        for i in 0..data_length {
+        for i in 0..data.len() {
             if (i % 16) == 0 {
                 addresses.push(format!("{:>0width$X}", i, width=10))
             }
@@ -47,6 +49,29 @@ impl File {
         addresses
 
     }
+
+    fn get_hex_data(data: &Vec<u8>) -> Vec<Vec<String>> {
+        let mut hex: Vec<Vec<String>> = Vec::new();
+        let mut row: Vec<String> = Vec::new();
+        let mut i: u8 = 0;
+
+        for byte in data {
+            if i < 15 {
+                row.push(format!("{:>0w$X}", *byte, w=2))
+            }
+            else if i == 15 {
+                i = 0;
+                hex.push(row.clone());
+                for _x in 0..15 {
+                    row.pop();
+                }
+            }
+            i += 1;
+        } 
+        hex
+    }
+
+
 
 
 

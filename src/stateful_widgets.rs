@@ -1,7 +1,7 @@
 use tui::{
     text::Text,
     style::Style,
-    widgets::ListState
+    widgets::{TableState, ListState}
 };
 
 
@@ -54,3 +54,43 @@ impl<T> StatefulList<T> {
 }
 
 
+pub struct StatefulTable<T> {
+    state: TableState,
+    items: Vec<Vec<T>>,
+}
+
+impl<T> StatefulTable<T> {
+    pub fn new(items: Vec<Vec<T>>) -> StatefulTable<T> {
+        StatefulTable {
+            state: TableState::default(),
+            items
+        }
+    }
+    pub fn next(&mut self) {
+        let i = match self.state.selected() {
+            Some(i) => {
+                if i >= self.items.len() - 1 {
+                    0
+                } else {
+                    i + 1
+                }
+            }
+            None => 0,
+        };
+        self.state.select(Some(i));
+    }
+
+    pub fn previous(&mut self) {
+        let i = match self.state.selected() {
+            Some(i) => {
+                if i == 0 {
+                    self.items.len() - 1
+                } else {
+                    i - 1
+                }
+            }
+            None => 0,
+        };
+        self.state.select(Some(i));
+    }
+}

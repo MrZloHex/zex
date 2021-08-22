@@ -162,12 +162,12 @@ fn main() -> Result<(), io::Error> {
                 column_i += 1;
             }
 
-            // let raw_view_block = Block::default()
-            //     .title("HEX View")
-            //     .borders(Borders::ALL);
+            let raw_view_block = Block::default()
+                .title("HEX View")
+                .borders(Borders::ALL);
 
             
-            // frame.render_stateful_widget(hex_table, chunks[1], &mut file.hex_view.state);
+            frame.render_widget(raw_view_block, chunks[1]);
 
             let char_view_block = Block::default()
                 .title("ASCII View")

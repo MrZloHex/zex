@@ -3,6 +3,17 @@ use std::io::Read;
 
 use super::stateful_widgets::StatefulList;
 
+fn char_u8(byte: &u8) -> String {
+    if *byte < 127 && *byte > 32 {
+        return format!("{}", *byte as char)
+    } else {
+        match *byte {
+            32 => {return "_".to_string()},
+            _ => {return " ".to_string()}
+        }
+    }
+}
+
 #[derive(Clone)]
 pub struct File {
     filename: String,
@@ -14,7 +25,8 @@ pub struct File {
     // TUI
     
     addresses: StatefulList<String>,
-    hex_view: Vec<StatefulList<String>>
+    hex_view: Vec<StatefulList<String>>,
+    ascii_view: Vec<StatefulList<String>>
 }
 
 impl File {
@@ -22,6 +34,7 @@ impl File {
         let data = File::get_file_data(filename);
         let addresses:Vec<String> = File::get_addresses_fom_length(&data);
         let hex = File::get_hex_data(&data);
+        let ascii = File::get_ascii_data(&data);
         let mut file = File {
             filename: filename.to_string(),
             length: data.len(),
@@ -30,10 +43,12 @@ impl File {
             vertical_offset: 0,
 
             addresses: StatefulList::new(addresses),
-            hex_view: hex
+            hex_view: hex,
+            ascii_view: ascii
         };
         file.addresses.select(0);
         file.hex_view[0].select(0);
+        file.ascii_view[0].select(0);
         file
     }
 
@@ -124,6 +139,71 @@ impl File {
         hex
     }
 
+    fn get_ascii_data(data: &Vec<u8>) -> Vec<StatefulList<String>> {
+        let mut vec_0 = Vec::new();
+        let mut vec_1 = Vec::new();
+        let mut vec_2 = Vec::new();
+        let mut vec_3 = Vec::new();
+        let mut vec_4 = Vec::new();
+        let mut vec_5 = Vec::new();
+        let mut vec_6 = Vec::new();
+        let mut vec_7 = Vec::new();
+        let mut vec_8 = Vec::new();
+        let mut vec_9 = Vec::new();
+        let mut vec_10 = Vec::new();
+        let mut vec_11 = Vec::new();
+        let mut vec_12 = Vec::new();
+        let mut vec_13 = Vec::new();
+        let mut vec_14 = Vec::new();
+        let mut vec_15 = Vec::new();
+        let mut offset: u8 = 0;
+
+        for byte in data {
+            if offset == 16 {
+                offset = 0;
+            }
+            match offset {
+                0 => vec_0.push(char_u8(byte)),
+                1 => vec_1.push(char_u8(byte)),
+                2 => vec_2.push(char_u8(byte)),
+                3 => vec_3.push(char_u8(byte)),
+                4 => vec_4.push(char_u8(byte)),
+                5 => vec_5.push(char_u8(byte)),
+                6 => vec_6.push(char_u8(byte)),
+                7 => vec_7.push(char_u8(byte)),
+                8 => vec_8.push(char_u8(byte)),
+                9 => vec_9.push(char_u8(byte)),
+                10 => vec_10.push(char_u8(byte)),
+                11 => vec_11.push(char_u8(byte)),
+                12 => vec_12.push(char_u8(byte)),
+                13 => vec_13.push(char_u8(byte)),
+                14 => vec_14.push(char_u8(byte)),
+                15 => vec_15.push(char_u8(byte)),
+                _ => ()
+            }
+            offset += 1;
+        }
+        let ascii = vec![
+            StatefulList::new(vec_0),
+            StatefulList::new(vec_1),
+            StatefulList::new(vec_2),
+            StatefulList::new(vec_3),
+            StatefulList::new(vec_4),
+            StatefulList::new(vec_5),
+            StatefulList::new(vec_6),
+            StatefulList::new(vec_7),
+            StatefulList::new(vec_8),
+            StatefulList::new(vec_9),
+            StatefulList::new(vec_10),
+            StatefulList::new(vec_11),
+            StatefulList::new(vec_12),
+            StatefulList::new(vec_13),
+            StatefulList::new(vec_14),
+            StatefulList::new(vec_15),
+        ];
+        ascii
+    }
+
 
 
 
@@ -131,16 +211,19 @@ impl File {
     pub fn next_address(&mut self) {
         self.addresses.next();
         self.hex_view[self.horizontal_offset].next();
+        self.ascii_view[self.horizontal_offset].next()
     }
 
     pub fn previous_address(&mut self) {
         self.addresses.previous();
         self.hex_view[self.horizontal_offset].previous();
+        self.ascii_view[self.horizontal_offset].previous()
     }
 
     pub fn next_offset(&mut self) {
         // UNSELECT PREVIOUS
         self.hex_view[self.horizontal_offset].unselect();
+        self.ascii_view[self.horizontal_offset].unselect();
         // GET VERTICAL OFFSET
         let v_offset = self.hex_view[self.horizontal_offset].selected_row;
         // INCREMENT OFFSET
@@ -150,12 +233,14 @@ impl File {
         }
 
         // SELECT RIGHT COLUMN
-        self.hex_view[self.horizontal_offset].select(v_offset)
+        self.hex_view[self.horizontal_offset].select(v_offset.clone());
+        self.ascii_view[self.horizontal_offset].select(v_offset)
     }
 
     pub fn previous_offset(&mut self) {
         // UNSELECT PREVIOUS
         self.hex_view[self.horizontal_offset].unselect();
+        self.ascii_view[self.horizontal_offset].unselect();
         // GET VERTICAL OFFSET
         let v_offset = self.hex_view[self.horizontal_offset].selected_row;
         // DECREMENT OFFSET
@@ -166,7 +251,8 @@ impl File {
         
 
         // SELECT RIGHT COLUMN
-        self.hex_view[self.horizontal_offset].select(v_offset)
+        self.hex_view[self.horizontal_offset].select(v_offset.clone());
+        self.ascii_view[self.horizontal_offset].select(v_offset)
     }
 
 
@@ -179,5 +265,9 @@ impl File {
 
     pub fn get_hex_view(&mut self) -> Vec<StatefulList<String>> {
         self.hex_view.clone()
+    }
+
+    pub fn get_ascii_view(&mut self) -> Vec<StatefulList<String>> {
+        self.ascii_view.clone()
     }
 }

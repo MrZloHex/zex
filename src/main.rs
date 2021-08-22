@@ -79,8 +79,8 @@ fn main() -> Result<(), io::Error> {
                     [
                         Constraint::Length(12),
                         Constraint::Length(49),
-                        Constraint::Length(16),
-                        Constraint::Length(22)
+                        Constraint::Length(18),
+                        Constraint::Length(8)
                     ]
                     .as_ref()
                 )
@@ -107,6 +107,8 @@ fn main() -> Result<(), io::Error> {
                 );
             
             frame.render_stateful_widget(address_list, chunks[0], &mut file.get_adresses().state);
+
+            // HEX
 
 
             let hex_columns = Layout::default()
@@ -138,7 +140,7 @@ fn main() -> Result<(), io::Error> {
             
             let mut column_i: usize = 0;
             for column in file.get_hex_view() {
-                let addresses: Vec<ListItem> = column
+                let hex: Vec<ListItem> = column
                     .items
                     .iter()
                     .map(|i| {
@@ -147,17 +149,17 @@ fn main() -> Result<(), io::Error> {
                     })
                     .collect();
 
-                let address_block = Block::default()
+                let hex_block = Block::default()
                     .borders(Borders::NONE);
 
-                let address_list = List::new(addresses)
-                    .block(address_block)
+                let hex_list = List::new(hex)
+                    .block(hex_block)
                     .highlight_style(
                         Style::default()
                             .fg(Color::Red)
                     );
                 
-                frame.render_stateful_widget(address_list, hex_columns[column_i], &mut file.get_hex_view()[column_i].state);
+                frame.render_stateful_widget(hex_list, hex_columns[column_i], &mut file.get_hex_view()[column_i].state);
                 column_i += 1;
             }
 
@@ -167,6 +169,60 @@ fn main() -> Result<(), io::Error> {
 
             
             frame.render_widget(raw_view_block, chunks[1]);
+
+            // ACII
+
+            let ascii_columns = Layout::default()
+                .direction(Direction::Horizontal)
+                .constraints(
+                    [
+                        Constraint::Length(1),
+                        Constraint::Length(1),
+                        Constraint::Length(1),
+                        Constraint::Length(1),
+                        Constraint::Length(1),
+                        Constraint::Length(1),
+                        Constraint::Length(1),
+                        Constraint::Length(1),
+                        Constraint::Length(1),
+                        Constraint::Length(1),
+                        Constraint::Length(1),
+                        Constraint::Length(1),
+                        Constraint::Length(1),
+                        Constraint::Length(1),
+                        Constraint::Length(1),
+                        Constraint::Length(1)
+
+                    ]
+                )
+                .margin(1)
+                .split(chunks[2]);
+
+            
+            let mut column_i: usize = 0;
+            for column in file.get_ascii_view() {
+                let ascii: Vec<ListItem> = column
+                    .items
+                    .iter()
+                    .map(|i| {
+                        let lines = vec![Spans::from((*i).clone())];
+                        ListItem::new(lines)
+                    })
+                    .collect();
+
+                let ascii_block = Block::default()
+                    .borders(Borders::NONE);
+
+                let ascii_list = List::new(ascii)
+                    .block(ascii_block)
+                    .highlight_style(
+                        Style::default()
+                            .fg(Color::Red)
+                    );
+                
+                frame.render_stateful_widget(ascii_list, ascii_columns[column_i], &mut file.get_ascii_view()[column_i].state);
+                column_i += 1;
+            }
 
             let char_view_block = Block::default()
                 .title("ASCII View")

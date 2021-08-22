@@ -80,7 +80,7 @@ fn main() -> Result<(), io::Error> {
                 .constraints(
                     [
                         Constraint::Length(12),
-                        Constraint::Length(50),
+                        Constraint::Length(49),
                         Constraint::Length(16),
                         Constraint::Length(22)
                     ]
@@ -134,6 +134,7 @@ fn main() -> Result<(), io::Error> {
 
                     ]
                 )
+                .margin(1)
                 .split(chunks[1]);
 
             

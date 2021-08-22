@@ -55,7 +55,6 @@ fn main() -> Result<(), io::Error> {
     terminal.clear()?;
 
     loop {
-
         terminal.draw(|frame| {
             let chunks = Layout::default()
                 .direction(Direction::Vertical)
@@ -159,7 +158,7 @@ fn main() -> Result<(), io::Error> {
                             .fg(Color::Red)
                     );
                 
-                frame.render_stateful_widget(address_list, hex_columns[column_i], &mut file.addresses.state);
+                frame.render_stateful_widget(address_list, hex_columns[column_i], &mut file.hex_view[column_i].state);
                 column_i += 1;
             }
 
@@ -191,6 +190,12 @@ fn main() -> Result<(), io::Error> {
                 },
                 Key::Up => {
                     file.previous_address();
+                },
+                Key::Right => {
+                    file.next_offset();
+                },
+                Key::Left => {
+                    file.previous_offset();
                 },
                 _ => ()
             }

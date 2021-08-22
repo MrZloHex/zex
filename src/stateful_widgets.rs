@@ -10,6 +10,7 @@ use tui::{
 pub struct StatefulList<T> {
     pub state: ListState,
     pub items: Vec<T>,
+    pub selected_row: usize
 }
 
 impl<T> StatefulList<T> {
@@ -17,6 +18,7 @@ impl<T> StatefulList<T> {
         StatefulList {
             state: ListState::default(),
             items,
+            selected_row: 0
         }
     }
 
@@ -49,7 +51,14 @@ impl<T> StatefulList<T> {
     }
 
     pub fn unselect(&mut self) {
+        self.selected_row = if let Some(offset) = self.state.selected() {
+            offset
+        } else { self.selected_row };
         self.state.select(None);
+    }
+
+    pub fn select(&mut self, offset: usize) {
+        self.state.select(Some(offset))
     }
 }
 

@@ -3,12 +3,16 @@ use std::io::{self, Read};
 
 use super::stateful_widgets::{StatefulList, StatefulTable};
 
+#[derive(Clone)]
 pub struct File {
     filename: String,
     data: Vec<u8>,
     length: usize,
+    horizontal_offset: usize,
+    vertical_offset: usize,
 
     // TUI
+    
     pub addresses: StatefulList<String>,
     pub hex_view: Vec<StatefulList<String>>
 }
@@ -18,14 +22,19 @@ impl File {
         let data = File::get_file_data(filename);
         let addresses:Vec<String> = File::get_addresses_fom_length(&data);
         let hex = File::get_hex_data(&data);
-        File {
+        let mut file = File {
             filename: filename.to_string(),
             length: data.len(),
             data,
+            horizontal_offset: 0,
+            vertical_offset: 0,
 
             addresses: StatefulList::new(addresses),
             hex_view: hex
-        }
+        };
+        file.addresses.select(0);
+        file.hex_view[0].select(0);
+        file
     }
 
     fn get_file_data(filename: &str) -> Vec<u8> {
@@ -68,7 +77,6 @@ impl File {
         let mut vec_14 = Vec::new();
         let mut vec_15 = Vec::new();
         let mut offset: u8 = 0;
-        let mut index: usize = 0;
 
         for byte in data {
             if offset == 16 {
@@ -121,13 +129,45 @@ impl File {
 
 
     pub fn next_address(&mut self) {
-        self.addresses.next()
+        self.addresses.next();
+        self.hex_view[self.horizontal_offset].next();
     }
 
     pub fn previous_address(&mut self) {
-        self.addresses.previous()
+        self.addresses.previous();
+        self.hex_view[self.horizontal_offset].previous();
     }
 
+    pub fn next_offset(&mut self) {
+        // UNSELECT PREVIOUS
+        self.hex_view[self.horizontal_offset].unselect();
+        // GET VERTICAL OFFSET
+        let v_offset = self.hex_view[self.horizontal_offset].selected_row;
+        // INCREMENT OFFSET
+        self.horizontal_offset += 1;
+        if self.horizontal_offset == 16 {
+            self.horizontal_offset = 0;
+        }
+
+        // SELECT RIGHT COLUMN
+        self.hex_view[self.horizontal_offset].select(v_offset)
+    }
+
+    pub fn previous_offset(&mut self) {
+        // UNSELECT PREVIOUS
+        self.hex_view[self.horizontal_offset].unselect();
+        // GET VERTICAL OFFSET
+        let v_offset = self.hex_view[self.horizontal_offset].selected_row;
+        // DECREMENT OFFSET
+        if self.horizontal_offset == 0 {
+            self.horizontal_offset = 16;
+        }
+        self.horizontal_offset -= 1;
+        
+
+        // SELECT RIGHT COLUMN
+        self.hex_view[self.horizontal_offset].select(v_offset)
+    }
 
 
 

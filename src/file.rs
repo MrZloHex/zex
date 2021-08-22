@@ -9,8 +9,8 @@ pub struct File {
     length: usize,
 
     // TUI
-    addresses: StatefulList<String>,
-    hex_view: StatefulTable<String>
+    pub addresses: StatefulList<String>,
+    pub hex_view: Vec<StatefulList<String>>
 }
 
 impl File {
@@ -24,7 +24,7 @@ impl File {
             data,
 
             addresses: StatefulList::new(addresses),
-            hex_view: StatefulTable::new(hex)
+            hex_view: hex
         }
     }
 
@@ -50,39 +50,69 @@ impl File {
 
     }
 
-    fn get_hex_data(data: &Vec<u8>) -> Vec<Vec<String>> {
-        let mut hex: Vec<Vec<String>> = Vec::new();
-        let mut row: Vec<String> = Vec::new();
-        let mut i: u8 = 0;
-        let mut lines: usize = 0;
-        let last_items = data.len() % 16;
-        let full_lines = (data.len() - last_items) / 16;
+    fn get_hex_data(data: &Vec<u8>) -> Vec<StatefulList<String>> {
+        let mut vec_0 = Vec::new();
+        let mut vec_1 = Vec::new();
+        let mut vec_2 = Vec::new();
+        let mut vec_3 = Vec::new();
+        let mut vec_4 = Vec::new();
+        let mut vec_5 = Vec::new();
+        let mut vec_6 = Vec::new();
+        let mut vec_7 = Vec::new();
+        let mut vec_8 = Vec::new();
+        let mut vec_9 = Vec::new();
+        let mut vec_10 = Vec::new();
+        let mut vec_11 = Vec::new();
+        let mut vec_12 = Vec::new();
+        let mut vec_13 = Vec::new();
+        let mut vec_14 = Vec::new();
+        let mut vec_15 = Vec::new();
+        let mut offset: u8 = 0;
+        let mut index: usize = 0;
 
         for byte in data {
-            if i == 16 {
-                i = 0;
-                hex.push(row.clone());
-                for _x in 0..16 {
-                    row.pop();
-                }
-                lines += 1;
+            if offset == 16 {
+                offset = 0;
             }
-            if i < 16 {
-                row.push(format!("{:>0w$X}", *byte, w=2));
+            match offset {
+                0 => vec_0.push(format!("{:>0width$X}", byte, width=2)),
+                1 => vec_1.push(format!("{:>0width$X}", byte, width=2)),
+                2 => vec_2.push(format!("{:>0width$X}", byte, width=2)),
+                3 => vec_3.push(format!("{:>0width$X}", byte, width=2)),
+                4 => vec_4.push(format!("{:>0width$X}", byte, width=2)),
+                5 => vec_5.push(format!("{:>0width$X}", byte, width=2)),
+                6 => vec_6.push(format!("{:>0width$X}", byte, width=2)),
+                7 => vec_7.push(format!("{:>0width$X}", byte, width=2)),
+                8 => vec_8.push(format!("{:>0width$X}", byte, width=2)),
+                9 => vec_9.push(format!("{:>0width$X}", byte, width=2)),
+                10 => vec_10.push(format!("{:>0width$X}", byte, width=2)),
+                11 => vec_11.push(format!("{:>0width$X}", byte, width=2)),
+                12 => vec_12.push(format!("{:>0width$X}", byte, width=2)),
+                13 => vec_13.push(format!("{:>0width$X}", byte, width=2)),
+                14 => vec_14.push(format!("{:>0width$X}", byte, width=2)),
+                15 => vec_15.push(format!("{:>0width$X}", byte, width=2)),
+                _ => ()
             }
-            if lines == full_lines && last_items == row.len() {
-                hex.push(row);
-                break;
-            }
-            i += 1;
-            
-        } 
-        for row in &hex {
-            for item in row {
-                print!("{} ", *item);
-            }
-            print!("\n");
+            offset += 1;
         }
+        let hex = vec![
+            StatefulList::new(vec_0),
+            StatefulList::new(vec_1),
+            StatefulList::new(vec_2),
+            StatefulList::new(vec_3),
+            StatefulList::new(vec_4),
+            StatefulList::new(vec_5),
+            StatefulList::new(vec_6),
+            StatefulList::new(vec_7),
+            StatefulList::new(vec_8),
+            StatefulList::new(vec_9),
+            StatefulList::new(vec_10),
+            StatefulList::new(vec_11),
+            StatefulList::new(vec_12),
+            StatefulList::new(vec_13),
+            StatefulList::new(vec_14),
+            StatefulList::new(vec_15),
+        ];
         hex
     }
 
@@ -105,5 +135,9 @@ impl File {
     // INTERFACE
     pub fn get_adresses(&mut self) -> StatefulList<String> {
         self.addresses.clone()
+    }
+
+    pub fn get_hex_view(&mut self) -> Vec<StatefulList<String>> {
+        self.hex_view.clone()
     }
 }

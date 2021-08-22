@@ -8,7 +8,7 @@ use tui::{
     backend::TermionBackend,
     Terminal,
     layout::{Constraint, Direction, Layout},
-    widgets::{Block, Borders, List, ListItem},
+    widgets::{Block, Borders, List, ListItem, Cell, Row, Table},
     text::Spans,
     style::{Color, Style}
 };
@@ -61,8 +61,8 @@ fn main() -> Result<(), io::Error> {
                 .direction(Direction::Vertical)
                 .constraints(
                     [
-                        Constraint::Percentage(95),
-                        Constraint::Percentage(5),
+                        Constraint::Percentage(96),
+                        Constraint::Percentage(4),
                     ]
                     .as_ref()
                 )
@@ -80,14 +80,15 @@ fn main() -> Result<(), io::Error> {
                 .constraints(
                     [
                         Constraint::Length(12),
-                        Constraint::Percentage(50),
-                        Constraint::Percentage(45)
+                        Constraint::Length(50),
+                        Constraint::Length(16),
+                        Constraint::Length(22)
                     ]
                     .as_ref()
                 )
                 .split(chunks[0]);
 
-            let addresses: Vec<ListItem> = file.get_adresses()
+            let addresses: Vec<ListItem> = file.addresses
                 .items
                 .iter()
                 .map(|i| {
@@ -107,12 +108,66 @@ fn main() -> Result<(), io::Error> {
                         .fg(Color::Red)
                 );
             
-            frame.render_stateful_widget(address_list, chunks[0], &mut file.get_adresses().state);
+            frame.render_stateful_widget(address_list, chunks[0], &mut file.addresses.state);
 
-            let raw_view_block = Block::default()
-                .title("HEX View")
-                .borders(Borders::ALL);
-            frame.render_widget(raw_view_block, chunks[1]);
+
+            let hex_columns = Layout::default()
+                .direction(Direction::Horizontal)
+                .constraints(
+                    [
+                        Constraint::Length(3),
+                        Constraint::Length(3),
+                        Constraint::Length(3),
+                        Constraint::Length(3),
+                        Constraint::Length(3),
+                        Constraint::Length(3),
+                        Constraint::Length(3),
+                        Constraint::Length(3),
+                        Constraint::Length(3),
+                        Constraint::Length(3),
+                        Constraint::Length(3),
+                        Constraint::Length(3),
+                        Constraint::Length(3),
+                        Constraint::Length(3),
+                        Constraint::Length(3),
+                        Constraint::Length(3)
+
+                    ]
+                )
+                .split(chunks[1]);
+
+            
+            let mut column_i: usize = 0;
+            for column in file.get_hex_view() {
+                let addresses: Vec<ListItem> = column
+                    .items
+                    .iter()
+                    .map(|i| {
+                        let lines = vec![Spans::from((*i).clone())];
+                        ListItem::new(lines)
+                    })
+                    .collect();
+
+                let address_block = Block::default()
+                    .borders(Borders::NONE);
+
+                let address_list = List::new(addresses)
+                    .block(address_block)
+                    .highlight_style(
+                        Style::default()
+                            .fg(Color::Red)
+                    );
+                
+                frame.render_stateful_widget(address_list, hex_columns[column_i], &mut file.addresses.state);
+                column_i += 1;
+            }
+
+            // let raw_view_block = Block::default()
+            //     .title("HEX View")
+            //     .borders(Borders::ALL);
+
+            
+            // frame.render_stateful_widget(hex_table, chunks[1], &mut file.hex_view.state);
 
             let char_view_block = Block::default()
                 .title("ASCII View")

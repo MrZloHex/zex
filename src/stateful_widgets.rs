@@ -54,9 +54,10 @@ impl<T> StatefulList<T> {
 }
 
 
+#[derive(Clone)]
 pub struct StatefulTable<T> {
-    state: TableState,
-    items: Vec<Vec<T>>,
+    pub state: TableState,
+    pub items: Vec<Vec<T>>,
 }
 
 impl<T> StatefulTable<T> {

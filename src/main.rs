@@ -8,7 +8,7 @@ use tui::{
     backend::TermionBackend,
     Terminal,
     layout::{Constraint, Direction, Layout},
-    widgets::{Block, Borders, List, ListItem, Cell, Row, Table},
+    widgets::{Block, Borders, List, ListItem},
     text::Spans,
     style::{Color, Style}
 };
@@ -24,7 +24,6 @@ mod file;
 use file::File;
 
 mod stateful_widgets;
-
 
 
 fn main() -> Result<(), io::Error> {
@@ -87,7 +86,7 @@ fn main() -> Result<(), io::Error> {
                 )
                 .split(chunks[0]);
 
-            let addresses: Vec<ListItem> = file.addresses
+            let addresses: Vec<ListItem> = file.get_adresses()
                 .items
                 .iter()
                 .map(|i| {
@@ -107,7 +106,7 @@ fn main() -> Result<(), io::Error> {
                         .fg(Color::Red)
                 );
             
-            frame.render_stateful_widget(address_list, chunks[0], &mut file.addresses.state);
+            frame.render_stateful_widget(address_list, chunks[0], &mut file.get_adresses().state);
 
 
             let hex_columns = Layout::default()
@@ -158,7 +157,7 @@ fn main() -> Result<(), io::Error> {
                             .fg(Color::Red)
                     );
                 
-                frame.render_stateful_widget(address_list, hex_columns[column_i], &mut file.hex_view[column_i].state);
+                frame.render_stateful_widget(address_list, hex_columns[column_i], &mut file.get_hex_view()[column_i].state);
                 column_i += 1;
             }
 

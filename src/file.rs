@@ -1,7 +1,7 @@
 use std::fs;
-use std::io::{self, Read};
+use std::io::Read;
 
-use super::stateful_widgets::{StatefulList, StatefulTable};
+use super::stateful_widgets::StatefulList;
 
 #[derive(Clone)]
 pub struct File {
@@ -13,8 +13,8 @@ pub struct File {
 
     // TUI
     
-    pub addresses: StatefulList<String>,
-    pub hex_view: Vec<StatefulList<String>>
+    addresses: StatefulList<String>,
+    hex_view: Vec<StatefulList<String>>
 }
 
 impl File {

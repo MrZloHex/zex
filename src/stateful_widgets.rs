@@ -1,6 +1,4 @@
 use tui::{
-    text::Text,
-    style::Style,
     widgets::{TableState, ListState}
 };
 

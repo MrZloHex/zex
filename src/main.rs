@@ -68,7 +68,11 @@ fn main() -> Result<(), io::Error> {
             
             let command_block = Block::default()
                 .title("Command")
-                .borders(Borders::ALL);
+                .borders(Borders::ALL)
+                .border_style(Style::default().fg(Color::Rgb(150, 150, 150)))
+                .style(
+                    Style::default().bg(Color::Rgb(30, 30, 30))
+                );
 
             frame.render_widget(command_block, chunks[1]);
 
@@ -78,7 +82,7 @@ fn main() -> Result<(), io::Error> {
                 .constraints(
                     [
                         Constraint::Length(12),
-                        Constraint::Length(49),
+                        Constraint::Length(52),
                         Constraint::Length(18),
                         Constraint::Length(8)
                     ]
@@ -97,7 +101,11 @@ fn main() -> Result<(), io::Error> {
 
             let address_block = Block::default()
                 .title("Address")
-                .borders(Borders::ALL);
+                .borders(Borders::ALL)
+                .border_style(Style::default().fg(Color::Rgb(150, 150, 150)))
+                .style(
+                    Style::default().bg(Color::Rgb(30, 30, 30))
+                );
 
             let address_list = List::new(addresses)
                 .block(address_block)
@@ -123,6 +131,7 @@ fn main() -> Result<(), io::Error> {
                         Constraint::Length(3),
                         Constraint::Length(3),
                         Constraint::Length(3),
+                        Constraint::Length(2),  // EMPTY
                         Constraint::Length(3),
                         Constraint::Length(3),
                         Constraint::Length(3),
@@ -139,6 +148,7 @@ fn main() -> Result<(), io::Error> {
 
             
             let mut column_i: usize = 0;
+            let mut hex_i: usize = 0;
             for column in file.get_hex_view() {
                 let hex: Vec<ListItem> = column
                     .items
@@ -158,14 +168,21 @@ fn main() -> Result<(), io::Error> {
                         Style::default()
                             .fg(Color::Red)
                     );
-                
-                frame.render_stateful_widget(hex_list, hex_columns[column_i], &mut file.get_hex_view()[column_i].state);
+                frame.render_stateful_widget(hex_list, hex_columns[hex_i], &mut file.get_hex_view()[column_i].state);
                 column_i += 1;
+                hex_i += 1;
+                if hex_i == 8 {
+                    hex_i = 9;
+                }
             }
 
             let raw_view_block = Block::default()
                 .title("HEX View")
-                .borders(Borders::ALL);
+                .borders(Borders::ALL)
+                .border_style(Style::default().fg(Color::Rgb(150, 150, 150)))
+                .style(
+                    Style::default().bg(Color::Rgb(30, 30, 30))
+                );
 
             
             frame.render_widget(raw_view_block, chunks[1]);
@@ -226,8 +243,20 @@ fn main() -> Result<(), io::Error> {
 
             let char_view_block = Block::default()
                 .title("ASCII View")
-                .borders(Borders::ALL);
+                .borders(Borders::ALL)
+                .border_style(Style::default().fg(Color::Rgb(150, 150, 150)))
+                .style(
+                    Style::default().bg(Color::Rgb(30, 30, 30))
+                );
             frame.render_widget(char_view_block, chunks[2]);
+
+
+            let nothing = Block::default()
+                .border_style(Style::default().fg(Color::Rgb(150, 150, 150)))
+                .style(
+                    Style::default().bg(Color::Rgb(30, 30, 30))
+                );
+            frame.render_widget(nothing, chunks[3]);
 
 
         })?;

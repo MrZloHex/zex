@@ -65,11 +65,22 @@ impl Colors {
 fn pick_color(byte: &u8) -> Color {
     if *byte > 32 && *byte < 127 {
         Color::Rgb(79, 141, 195)
+    } else if *byte == 32 {
+        Color::Rgb(240, 157, 48)
     } else {
         Color::Rgb(200, 200, 200)
     }
 }
 
+fn make_char(ch: &char) -> String {
+    if ((*ch) as u8) > 32 && ((*ch) as u8) < 127 {
+        ch.to_string()
+    } else if (*ch) as u8 == 32 {
+        "_".to_string()
+    } else {
+        ".".to_string()
+    }
+}
 
 
 fn main() -> Result<(), io::Error> {
@@ -224,7 +235,7 @@ fn main() -> Result<(), io::Error> {
                     .items
                     .iter()
                     .map(|i| {
-                        let lines = vec![Spans::from((*i).clone())];
+                        let lines = vec![Spans::from(Span::styled(format!("{:>0w$X}", *i, w=2), Style::default().fg(pick_color(i))))];
                         ListItem::new(lines)
                     })
                     .collect();
@@ -291,7 +302,7 @@ fn main() -> Result<(), io::Error> {
                     .items
                     .iter()
                     .map(|i| {
-                        let lines = vec![Spans::from((*i).clone())];
+                        let lines = vec![Spans::from(Span::styled(make_char(i), Style::default().fg(pick_color(&(*i as u8)))))];
                         ListItem::new(lines)
                     })
                     .collect();

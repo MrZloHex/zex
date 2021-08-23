@@ -3,16 +3,6 @@ use std::io::Read;
 
 use super::stateful_widgets::StatefulList;
 
-fn char_u8(byte: &u8) -> String {
-    if *byte < 127 && *byte > 32 {
-        return format!("{}", *byte as char)
-    } else {
-        match *byte {
-            32 => {return "_".to_string()},
-            _ => {return " ".to_string()}
-        }
-    }
-}
 
 #[derive(Clone)]
 pub struct File {
@@ -25,8 +15,8 @@ pub struct File {
     // TUI
     
     addresses: StatefulList<String>,
-    hex_view: Vec<StatefulList<String>>,
-    ascii_view: Vec<StatefulList<String>>
+    hex_view: Vec<StatefulList<u8>>,
+    ascii_view: Vec<StatefulList<char>>
 }
 
 impl File {
@@ -74,7 +64,7 @@ impl File {
 
     }
 
-    fn get_hex_data(data: &Vec<u8>) -> Vec<StatefulList<String>> {
+    fn get_hex_data(data: &Vec<u8>) -> Vec<StatefulList<u8>> {
         let mut vec_0 = Vec::new();
         let mut vec_1 = Vec::new();
         let mut vec_2 = Vec::new();
@@ -98,22 +88,22 @@ impl File {
                 offset = 0;
             }
             match offset {
-                0 => vec_0.push(format!("{:>0width$X}", byte, width=2)),
-                1 => vec_1.push(format!("{:>0width$X}", byte, width=2)),
-                2 => vec_2.push(format!("{:>0width$X}", byte, width=2)),
-                3 => vec_3.push(format!("{:>0width$X}", byte, width=2)),
-                4 => vec_4.push(format!("{:>0width$X}", byte, width=2)),
-                5 => vec_5.push(format!("{:>0width$X}", byte, width=2)),
-                6 => vec_6.push(format!("{:>0width$X}", byte, width=2)),
-                7 => vec_7.push(format!("{:>0width$X}", byte, width=2)),
-                8 => vec_8.push(format!("{:>0width$X}", byte, width=2)),
-                9 => vec_9.push(format!("{:>0width$X}", byte, width=2)),
-                10 => vec_10.push(format!("{:>0width$X}", byte, width=2)),
-                11 => vec_11.push(format!("{:>0width$X}", byte, width=2)),
-                12 => vec_12.push(format!("{:>0width$X}", byte, width=2)),
-                13 => vec_13.push(format!("{:>0width$X}", byte, width=2)),
-                14 => vec_14.push(format!("{:>0width$X}", byte, width=2)),
-                15 => vec_15.push(format!("{:>0width$X}", byte, width=2)),
+                0 => vec_0.push(*byte),
+                1 => vec_1.push(*byte),
+                2 => vec_2.push(*byte),
+                3 => vec_3.push(*byte),
+                4 => vec_4.push(*byte),
+                5 => vec_5.push(*byte),
+                6 => vec_6.push(*byte),
+                7 => vec_7.push(*byte),
+                8 => vec_8.push(*byte),
+                9 => vec_9.push(*byte),
+                10 => vec_10.push(*byte),
+                11 => vec_11.push(*byte),
+                12 => vec_12.push(*byte),
+                13 => vec_13.push(*byte),
+                14 => vec_14.push(*byte),
+                15 => vec_15.push(*byte),
                 _ => ()
             }
             offset += 1;
@@ -139,7 +129,7 @@ impl File {
         hex
     }
 
-    fn get_ascii_data(data: &Vec<u8>) -> Vec<StatefulList<String>> {
+    fn get_ascii_data(data: &Vec<u8>) -> Vec<StatefulList<char>> {
         let mut vec_0 = Vec::new();
         let mut vec_1 = Vec::new();
         let mut vec_2 = Vec::new();
@@ -163,22 +153,22 @@ impl File {
                 offset = 0;
             }
             match offset {
-                0 => vec_0.push(char_u8(byte)),
-                1 => vec_1.push(char_u8(byte)),
-                2 => vec_2.push(char_u8(byte)),
-                3 => vec_3.push(char_u8(byte)),
-                4 => vec_4.push(char_u8(byte)),
-                5 => vec_5.push(char_u8(byte)),
-                6 => vec_6.push(char_u8(byte)),
-                7 => vec_7.push(char_u8(byte)),
-                8 => vec_8.push(char_u8(byte)),
-                9 => vec_9.push(char_u8(byte)),
-                10 => vec_10.push(char_u8(byte)),
-                11 => vec_11.push(char_u8(byte)),
-                12 => vec_12.push(char_u8(byte)),
-                13 => vec_13.push(char_u8(byte)),
-                14 => vec_14.push(char_u8(byte)),
-                15 => vec_15.push(char_u8(byte)),
+                0 => vec_0.push(*byte as char),
+                1 => vec_1.push(*byte as char),
+                2 => vec_2.push(*byte as char),
+                3 => vec_3.push(*byte as char),
+                4 => vec_4.push(*byte as char),
+                5 => vec_5.push(*byte as char),
+                6 => vec_6.push(*byte as char),
+                7 => vec_7.push(*byte as char),
+                8 => vec_8.push(*byte as char),
+                9 => vec_9.push(*byte as char),
+                10 => vec_10.push(*byte as char),
+                11 => vec_11.push(*byte as char),
+                12 => vec_12.push(*byte as char),
+                13 => vec_13.push(*byte as char),
+                14 => vec_14.push(*byte as char),
+                15 => vec_15.push(*byte as char),
                 _ => ()
             }
             offset += 1;
@@ -263,11 +253,11 @@ impl File {
         self.addresses.clone()
     }
 
-    pub fn get_hex_view(&mut self) -> Vec<StatefulList<String>> {
+    pub fn get_hex_view(&mut self) -> Vec<StatefulList<u8>> {
         self.hex_view.clone()
     }
 
-    pub fn get_ascii_view(&mut self) -> Vec<StatefulList<String>> {
+    pub fn get_ascii_view(&mut self) -> Vec<StatefulList<char>> {
         self.ascii_view.clone()
     }
 }

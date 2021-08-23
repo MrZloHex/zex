@@ -40,7 +40,7 @@ impl Colors {
             background: Color::Rgb(20, 20, 20),
             border_style: Color::Rgb(150, 150, 150),
             title: Color::Rgb(200, 200, 200),
-            selected: Color::Rgb(80, 80, 80),
+            selected: Color::Rgb(100, 100, 100),
             text: Color::Rgb(200, 200, 200)
         }
     }
@@ -65,8 +65,10 @@ impl Colors {
 fn pick_color(byte: &u8) -> Color {
     if *byte > 32 && *byte < 127 {
         Color::Rgb(79, 141, 195)
-    } else if *byte == 32 {
+    } else if *byte == 32 || *byte == 10 {
         Color::Rgb(240, 157, 48)
+    } else if *byte > 0 && *byte < 32 {
+        Color::Rgb(123, 230, 126)
     } else {
         Color::Rgb(200, 200, 200)
     }
@@ -77,6 +79,8 @@ fn make_char(ch: &char) -> String {
         ch.to_string()
     } else if (*ch) as u8 == 32 {
         "_".to_string()
+    } else if (*ch) as u8 == 0 {
+        "0".to_string()
     } else {
         ".".to_string()
     }

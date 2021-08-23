@@ -9,7 +9,7 @@ use tui::{
     Terminal,
     layout::{Constraint, Direction, Layout},
     widgets::{Block, Borders, List, ListItem},
-    text::Spans,
+    text::{Span, Spans},
     style::{Color, Style}
 };
 use termion::{
@@ -67,7 +67,7 @@ fn main() -> Result<(), io::Error> {
                 .split(frame.size());
             
             let command_block = Block::default()
-                .title("Command")
+                .title(Span::styled("Command", Style::default().fg(Color::Rgb(200, 200, 200))))
                 .borders(Borders::ALL)
                 .border_style(Style::default().fg(Color::Rgb(150, 150, 150)))
                 .style(
@@ -100,7 +100,7 @@ fn main() -> Result<(), io::Error> {
                 .collect();
 
             let address_block = Block::default()
-                .title("Address")
+                .title(Span::styled("Address", Style::default().fg(Color::Rgb(200, 200, 200))))
                 .borders(Borders::ALL)
                 .border_style(Style::default().fg(Color::Rgb(150, 150, 150)))
                 .style(
@@ -177,7 +177,7 @@ fn main() -> Result<(), io::Error> {
             }
 
             let raw_view_block = Block::default()
-                .title("HEX View")
+                .title(Span::styled("Hex", Style::default().fg(Color::Rgb(200, 200, 200))))
                 .borders(Borders::ALL)
                 .border_style(Style::default().fg(Color::Rgb(150, 150, 150)))
                 .style(
@@ -242,7 +242,7 @@ fn main() -> Result<(), io::Error> {
             }
 
             let char_view_block = Block::default()
-                .title("ASCII View")
+                .title(Span::styled("ASCII", Style::default().fg(Color::Rgb(200, 200, 200))))
                 .borders(Borders::ALL)
                 .border_style(Style::default().fg(Color::Rgb(150, 150, 150)))
                 .style(

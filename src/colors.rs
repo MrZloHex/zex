@@ -1,3 +1,5 @@
+use tui::style::Color;
+
 #[derive(Clone)]
 pub struct ByteColors {
     ascii: Color,
@@ -17,11 +19,11 @@ impl ByteColors {
     }
 
     pub fn get_byte_color(&self, byte: u8) -> Color {
-        if *byte > 32 && *byte < 127 {
+        if byte > 32 && byte < 127 {
             self.ascii.clone()
-        } else if *byte == 32 || *byte == 10 {
+        } else if byte == 32 || byte == 10 {
             self.space_line.clone()
-        } else if (*byte > 0 && *byte < 32) || *byte == 127 {
+        } else if (byte > 0 && byte < 32) || byte == 127 {
             self.service_symbols.clone()
         } else {
             self.zero.clone()

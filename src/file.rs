@@ -89,15 +89,15 @@ impl File {
     }
 
     // INTERFACE
-    pub fn get_adresses(&mut self) -> StatefulList<String> {
-        self.addresses.clone()
+    pub fn get_filename(&self) -> String {
+        self.filename.clone()
     }
 
-    pub fn get_hex_view(&mut self) -> Vec<StatefulList<u8>> {
-        self.hex_view.clone()
+    pub fn get_bytes(&self) -> Vec<u8> {
+        self.bytes.clone()
     }
 
-    pub fn get_ascii_view(&mut self) -> Vec<StatefulList<char>> {
-        self.ascii_view.clone()
+    pub fn get_chars(&self) -> Vec<char> {
+        self.chars.clone()
     }
 }

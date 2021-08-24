@@ -51,10 +51,10 @@ fn make_addresses(length: usize, color: Color) -> StatefulList<(String, Style)> 
 
     for i in 0..length {
         if (i % 16) == 0 {
-            vec_addresses.push(
+            vec_addresses.push((
                 format!("{:>0width$X}", i, width = 10),
                 Style::default().fg(color)
-            )
+            ))
         }
     }
 
@@ -127,7 +127,7 @@ fn make_bytes(bytes: Vec<u8>, color: ByteColors) -> Vec<StatefulList<(String, St
     hex
 }
 
-fn make_chars(bytes: Vec<u8>, color: ByteColors) -> Vec<StatefulList<(String, Style)>> {
+fn make_chars(bytes: Vec<char>, color: ByteColors) -> Vec<StatefulList<(String, Style)>> {
     let mut vec_0 = Vec::new();
         let mut vec_1 = Vec::new();
         let mut vec_2 = Vec::new();
@@ -151,22 +151,22 @@ fn make_chars(bytes: Vec<u8>, color: ByteColors) -> Vec<StatefulList<(String, St
                 offset = 0;
             }
             match offset {
-                0 => vec_0.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte)))),
-                1 => vec_1.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte)))),
-                2 => vec_2.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte)))),
-                3 => vec_3.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte)))),
-                4 => vec_4.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte)))),
-                5 => vec_5.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte)))),
-                6 => vec_6.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte)))),
-                7 => vec_7.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte)))),
-                8 => vec_8.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte)))),
-                9 => vec_9.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte)))),
-                10 => vec_10.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte)))),
-                11 => vec_11.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte)))),
-                12 => vec_12.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte)))),
-                13 => vec_13.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte)))),
-                14 => vec_14.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte)))),
-                15 => vec_15.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte)))),
+                0 => vec_0.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte as u8)))),
+                1 => vec_1.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte as u8)))),
+                2 => vec_2.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte as u8)))),
+                3 => vec_3.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte as u8)))),
+                4 => vec_4.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte as u8)))),
+                5 => vec_5.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte as u8)))),
+                6 => vec_6.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte as u8)))),
+                7 => vec_7.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte as u8)))),
+                8 => vec_8.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte as u8)))),
+                9 => vec_9.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte as u8)))),
+                10 => vec_10.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte as u8)))),
+                11 => vec_11.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte as u8)))),
+                12 => vec_12.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte as u8)))),
+                13 => vec_13.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte as u8)))),
+                14 => vec_14.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte as u8)))),
+                15 => vec_15.push((make_char(&byte), Style::default().fg(color.get_byte_color(byte as u8)))),
                 _ => (),
             }
             offset += 1;
@@ -192,12 +192,12 @@ fn make_chars(bytes: Vec<u8>, color: ByteColors) -> Vec<StatefulList<(String, St
         ascii
 }
 
-fn make_char(ch: &u8) -> String {
-    if *ch > 32 && *ch < 127 {
-        (*ch as char).to_string()
-    } else if *ch == 32 {
+fn make_char(ch: &char) -> String {
+    if ((*ch) as u8) > 32 && ((*ch) as u8) < 127 {
+        (*ch).to_string()
+    } else if ((*ch) as u8) == 32 {
         "_".to_string()
-    } else if *ch == 0 {
+    } else if ((*ch) as u8) == 0 {
         "0".to_string()
     } else {
         ".".to_string()

@@ -11,10 +11,10 @@ pub struct ByteColors {
 impl ByteColors {
     pub fn new() -> ByteColors {
         ByteColors {
-            ascii: Color::Rgb(79, 141, 195),
-            space_line: Color::Rgb(240, 157, 48),
-            service_symbols: Color::Rgb(123, 230, 126),
-            zero: Color::Rgb(200, 200, 200)
+            ascii: Color::Rgb(184, 187, 38),
+            space_line: Color::Rgb(67, 133, 136),
+            service_symbols: Color::Rgb(254, 128, 25),
+            zero: Color::Rgb(146, 131, 116)
         }
     }
 
@@ -45,11 +45,11 @@ pub struct ColorPallete {
 impl ColorPallete {
     pub fn new() -> Self {
         ColorPallete {
-            background: Color::Rgb(20, 20, 20),
-            border_style: Color::Rgb(150, 150, 150),
-            title: Color::Rgb(200, 200, 200),
-            selected: Color::Rgb(100, 100, 100),
-            text: Color::Rgb(200, 200, 200),
+            background: Color::Rgb(40, 40, 40),
+            border_style: Color::Rgb(80, 73, 69),
+            title: Color::Rgb(235, 219, 178),
+            selected: Color::Rgb(124, 111, 100),
+            text: Color::Rgb(168, 153, 132),
             byte_colors: ByteColors::new()
         }
     }

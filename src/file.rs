@@ -3,43 +3,25 @@ use std::io::Read;
 
 use super::stateful_widgets::StatefulList;
 
-
 #[derive(Clone)]
 pub struct File {
     filename: String,
-    data: Vec<u8>,
-    length: usize,
-    horizontal_offset: usize,
-    vertical_offset: usize,
-
-    // TUI
-    
-    addresses: StatefulList<String>,
-    hex_view: Vec<StatefulList<u8>>,
-    ascii_view: Vec<StatefulList<char>>
+    bytes: Vec<u8>,
+    chars: Vec<char>,
+    length: usize
 }
 
 impl File {
     pub fn new(filename: &str) -> File {
-        let data = File::get_file_data(filename);
-        let addresses:Vec<String> = File::get_addresses_fom_length(&data);
-        let hex = File::get_hex_data(&data);
-        let ascii = File::get_ascii_data(&data);
-        let mut file = File {
-            filename: filename.to_string(),
-            length: data.len(),
-            data,
-            horizontal_offset: 0,
-            vertical_offset: 0,
+        let bytes = File::get_file_data(filename);
+        let chars = File::chars_from_u8(&bytes);
 
-            addresses: StatefulList::new(addresses),
-            hex_view: hex,
-            ascii_view: ascii
-        };
-        file.addresses.select(0);
-        file.hex_view[0].select(0);
-        file.ascii_view[0].select(0);
-        file
+        File {
+            filename: filename.to_string(),
+            length: bytes.len(),
+            bytes,
+            chars
+        }
     }
 
     fn get_file_data(filename: &str) -> Vec<u8> {
@@ -47,8 +29,16 @@ impl File {
         let metadata = fs::metadata(&filename).expect("unable to read metadata");
         let mut buffer = vec![0; metadata.len() as usize];
         f.read(&mut buffer).expect("buffer overflow");
-    
+
         buffer
+    }
+
+    fn chars_from_u8(bytes: &Vec<u8>) -> Vec<char> {
+        let mut chars: Vec<char> = Vec::new();
+        for byte in *bytes {
+            chars.push(byte.clone() as char)
+        }
+        chars
     }
 
     fn get_addresses_fom_length(data: &Vec<u8>) -> Vec<String> {
@@ -56,12 +46,11 @@ impl File {
 
         for i in 0..data.len() {
             if (i % 16) == 0 {
-                addresses.push(format!("{:>0width$X}", i, width=10))
+                addresses.push(format!("{:>0width$X}", i, width = 10))
             }
         }
 
         addresses
-
     }
 
     fn get_hex_data(data: &Vec<u8>) -> Vec<StatefulList<u8>> {
@@ -104,7 +93,7 @@ impl File {
                 13 => vec_13.push(*byte),
                 14 => vec_14.push(*byte),
                 15 => vec_15.push(*byte),
-                _ => ()
+                _ => (),
             }
             offset += 1;
         }
@@ -169,7 +158,7 @@ impl File {
                 13 => vec_13.push(*byte as char),
                 14 => vec_14.push(*byte as char),
                 15 => vec_15.push(*byte as char),
-                _ => ()
+                _ => (),
             }
             offset += 1;
         }
@@ -193,10 +182,6 @@ impl File {
         ];
         ascii
     }
-
-
-
-
 
     pub fn next_address(&mut self) {
         self.addresses.next();
@@ -238,15 +223,11 @@ impl File {
             self.horizontal_offset = 16;
         }
         self.horizontal_offset -= 1;
-        
 
         // SELECT RIGHT COLUMN
         self.hex_view[self.horizontal_offset].select(v_offset.clone());
         self.ascii_view[self.horizontal_offset].select(v_offset)
     }
-
-
-
 
     // INTERFACE
     pub fn get_adresses(&mut self) -> StatefulList<String> {

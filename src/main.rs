@@ -1,23 +1,22 @@
-use std::io;
+use std::io::{self, Read};
 
-use clap::{App, load_yaml};
+use clap::{load_yaml, App};
 
-use std::io::Read;
-
-use tui::{
-    backend::TermionBackend,
-    Terminal,
-    layout::{Constraint, Direction, Layout},
-    widgets::{Block, Borders, List, ListItem},
-    text::{Span, Spans},
-    style::{Color, Style}
-};
 use termion::{
     async_stdin,
     event::Key,
     input::TermRead,
     raw::IntoRawMode,
-    screen::AlternateScreen
+    screen::AlternateScreen,
+};
+
+use tui::{
+    backend::TermionBackend,
+    layout::{Constraint, Direction, Layout},
+    style::{Color, Style},
+    text::{Span, Spans},
+    widgets::{Block, Borders, List, ListItem},
+    Terminal,
 };
 
 mod file;
@@ -25,23 +24,26 @@ use file::File;
 
 mod stateful_widgets;
 
+mod display;
+use display::Display;
 
-struct Colors {
+
+struct ColorPallete {
     background: Color,
     border_style: Color,
     title: Color,
     selected: Color,
-    text: Color
+    text: Color,
 }
 
-impl Colors {
+impl ColorPallete {
     pub fn new() -> Self {
-        Colors {
+        ColorPallete {
             background: Color::Rgb(20, 20, 20),
             border_style: Color::Rgb(150, 150, 150),
             title: Color::Rgb(200, 200, 200),
             selected: Color::Rgb(100, 100, 100),
-            text: Color::Rgb(200, 200, 200)
+            text: Color::Rgb(200, 200, 200),
         }
     }
     pub fn bg(&self) -> Color {
@@ -60,7 +62,6 @@ impl Colors {
         self.text.clone()
     }
 }
-
 
 fn pick_color(byte: &u8) -> Color {
     if *byte > 32 && *byte < 127 {
@@ -86,22 +87,19 @@ fn make_char(ch: &char) -> String {
     }
 }
 
-
 fn main() -> Result<(), io::Error> {
     let yaml = load_yaml!("cli.yaml");
     let matches = App::from(yaml).get_matches();
     let filename = if let Some(fname) = matches.value_of("file") {
         fname
     } else {
-        panic!();
+        panic!("You should set filname");
     };
 
-    let mut file = File::new(filename);
+    let file = File::new(filename);
+    let mut display = Display::new(file);
+
     let colors = Colors::new();
-
-
-
-
 
     // tui
 
@@ -111,32 +109,23 @@ fn main() -> Result<(), io::Error> {
     let mut terminal = Terminal::new(backend)?;
 
     let mut asi = async_stdin();
-    
+
     terminal.clear()?;
 
     loop {
         terminal.draw(|frame| {
             let chunks = Layout::default()
                 .direction(Direction::Vertical)
-                .constraints(
-                    [
-                        Constraint::Percentage(96),
-                        Constraint::Percentage(4),
-                    ]
-                    .as_ref()
-                )
+                .constraints([Constraint::Percentage(96), Constraint::Percentage(4)].as_ref())
                 .split(frame.size());
-            
+
             let command_block = Block::default()
                 .title(Span::styled("Command", Style::default().fg(colors.tl())))
                 .borders(Borders::ALL)
                 .border_style(Style::default().fg(colors.bs()))
-                .style(
-                    Style::default().bg(colors.bg())
-                );
+                .style(Style::default().bg(colors.bg()));
 
             frame.render_widget(command_block, chunks[1]);
-
 
             let chunks = Layout::default()
                 .direction(Direction::Horizontal)
@@ -145,13 +134,14 @@ fn main() -> Result<(), io::Error> {
                         Constraint::Length(12),
                         Constraint::Length(53),
                         Constraint::Length(18),
-                        Constraint::Length(8)
+                        Constraint::Length(8),
                     ]
-                    .as_ref()
+                    .as_ref(),
                 )
                 .split(chunks[0]);
 
-            let addresses: Vec<ListItem> = file.get_adresses()
+            let addresses: Vec<ListItem> = file
+                .get_adresses()
                 .items
                 .iter()
                 .map(|i| {
@@ -164,17 +154,12 @@ fn main() -> Result<(), io::Error> {
                 .title(Span::styled("Address", Style::default().fg(colors.tl())))
                 .borders(Borders::ALL)
                 .border_style(Style::default().fg(colors.bs()))
-                .style(
-                    Style::default().bg(colors.bg())
-                );
+                .style(Style::default().bg(colors.bg()));
 
             let address_list = List::new(addresses)
                 .block(address_block)
-                .highlight_style(
-                    Style::default()
-                        .bg(colors.slct())
-                );
-            
+                .highlight_style(Style::default().bg(colors.slct()));
+
             frame.render_stateful_widget(address_list, chunks[0], &mut file.get_adresses().state);
 
             // HEX
@@ -183,55 +168,49 @@ fn main() -> Result<(), io::Error> {
                 .title(Span::styled("Hex", Style::default().fg(colors.tl())))
                 .borders(Borders::ALL)
                 .border_style(Style::default().fg(colors.bs()))
-                .style(
-                    Style::default().bg(colors.bg())
-                );
+                .style(Style::default().bg(colors.bg()));
             frame.render_widget(raw_view_block, chunks[1]);
 
             let hex_columns = Layout::default()
                 .direction(Direction::Horizontal)
-                .constraints(
-                    [
-                        Constraint::Length(1),
-                        Constraint::Length(2),
-                        Constraint::Length(1),
-                        Constraint::Length(2),
-                        Constraint::Length(1),
-                        Constraint::Length(2),
-                        Constraint::Length(1),
-                        Constraint::Length(2),
-                        Constraint::Length(1),
-                        Constraint::Length(2),
-                        Constraint::Length(1),
-                        Constraint::Length(2),
-                        Constraint::Length(1),
-                        Constraint::Length(2),
-                        Constraint::Length(1),
-                        Constraint::Length(2),
-                        Constraint::Length(3),  // EMPTY
-                        Constraint::Length(2),
-                        Constraint::Length(1),
-                        Constraint::Length(2),
-                        Constraint::Length(1),
-                        Constraint::Length(2),
-                        Constraint::Length(1),
-                        Constraint::Length(2),
-                        Constraint::Length(1),
-                        Constraint::Length(2),
-                        Constraint::Length(1),
-                        Constraint::Length(2),
-                        Constraint::Length(1),
-                        Constraint::Length(2),
-                        Constraint::Length(1),
-                        Constraint::Length(2),
-                        Constraint::Length(1),
-
-                    ]
-                )
+                .constraints([
+                    Constraint::Length(1),
+                    Constraint::Length(2),
+                    Constraint::Length(1),
+                    Constraint::Length(2),
+                    Constraint::Length(1),
+                    Constraint::Length(2),
+                    Constraint::Length(1),
+                    Constraint::Length(2),
+                    Constraint::Length(1),
+                    Constraint::Length(2),
+                    Constraint::Length(1),
+                    Constraint::Length(2),
+                    Constraint::Length(1),
+                    Constraint::Length(2),
+                    Constraint::Length(1),
+                    Constraint::Length(2),
+                    Constraint::Length(3), // EMPTY
+                    Constraint::Length(2),
+                    Constraint::Length(1),
+                    Constraint::Length(2),
+                    Constraint::Length(1),
+                    Constraint::Length(2),
+                    Constraint::Length(1),
+                    Constraint::Length(2),
+                    Constraint::Length(1),
+                    Constraint::Length(2),
+                    Constraint::Length(1),
+                    Constraint::Length(2),
+                    Constraint::Length(1),
+                    Constraint::Length(2),
+                    Constraint::Length(1),
+                    Constraint::Length(2),
+                    Constraint::Length(1),
+                ])
                 .margin(1)
                 .split(chunks[1]);
 
-            
             let mut column_i: usize = 0;
             let mut hex_i: usize = 1;
             for column in file.get_hex_view() {
@@ -239,21 +218,24 @@ fn main() -> Result<(), io::Error> {
                     .items
                     .iter()
                     .map(|i| {
-                        let lines = vec![Spans::from(Span::styled(format!("{:>0w$X}", *i, w=2), Style::default().fg(pick_color(i))))];
+                        let lines = vec![Spans::from(Span::styled(
+                            format!("{:>0w$X}", *i, w = 2),
+                            Style::default().fg(pick_color(i)),
+                        ))];
                         ListItem::new(lines)
                     })
                     .collect();
 
-                let hex_block = Block::default()
-                    .borders(Borders::NONE);
+                let hex_block = Block::default().borders(Borders::NONE);
 
                 let hex_list = List::new(hex)
                     .block(hex_block)
-                    .highlight_style(
-                        Style::default()
-                            .bg(colors.slct())
-                    );
-                frame.render_stateful_widget(hex_list, hex_columns[hex_i], &mut file.get_hex_view()[column_i].state);
+                    .highlight_style(Style::default().bg(colors.slct()));
+                frame.render_stateful_widget(
+                    hex_list,
+                    hex_columns[hex_i],
+                    &mut file.get_hex_view()[column_i].state,
+                );
                 column_i += 1;
                 hex_i += 2;
                 //if hex_i == 15 {
@@ -261,81 +243,69 @@ fn main() -> Result<(), io::Error> {
                 //}
             }
 
-
             // ACII
 
             let char_view_block = Block::default()
                 .title(Span::styled("ASCII", Style::default().fg(colors.tl())))
                 .borders(Borders::ALL)
                 .border_style(Style::default().fg(colors.bs()))
-                .style(
-                    Style::default().bg(colors.bg())
-                );
+                .style(Style::default().bg(colors.bg()));
             frame.render_widget(char_view_block, chunks[2]);
 
             let ascii_columns = Layout::default()
                 .direction(Direction::Horizontal)
-                .constraints(
-                    [
-                        Constraint::Length(1),
-                        Constraint::Length(1),
-                        Constraint::Length(1),
-                        Constraint::Length(1),
-                        Constraint::Length(1),
-                        Constraint::Length(1),
-                        Constraint::Length(1),
-                        Constraint::Length(1),
-                        Constraint::Length(1),
-                        Constraint::Length(1),
-                        Constraint::Length(1),
-                        Constraint::Length(1),
-                        Constraint::Length(1),
-                        Constraint::Length(1),
-                        Constraint::Length(1),
-                        Constraint::Length(1)
-
-                    ]
-                )
+                .constraints([
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                ])
                 .margin(1)
                 .split(chunks[2]);
 
-            
             let mut column_i: usize = 0;
             for column in file.get_ascii_view() {
                 let ascii: Vec<ListItem> = column
                     .items
                     .iter()
                     .map(|i| {
-                        let lines = vec![Spans::from(Span::styled(make_char(i), Style::default().fg(pick_color(&(*i as u8)))))];
+                        let lines = vec![Spans::from(Span::styled(
+                            make_char(i),
+                            Style::default().fg(pick_color(&(*i as u8))),
+                        ))];
                         ListItem::new(lines)
                     })
                     .collect();
 
-                let ascii_block = Block::default()
-                    .borders(Borders::NONE);
+                let ascii_block = Block::default().borders(Borders::NONE);
 
                 let ascii_list = List::new(ascii)
                     .block(ascii_block)
-                    .highlight_style(
-                        Style::default()
-                            .bg(colors.slct())
-                    );
-                
-                frame.render_stateful_widget(ascii_list, ascii_columns[column_i], &mut file.get_ascii_view()[column_i].state);
+                    .highlight_style(Style::default().bg(colors.slct()));
+
+                frame.render_stateful_widget(
+                    ascii_list,
+                    ascii_columns[column_i],
+                    &mut file.get_ascii_view()[column_i].state,
+                );
                 column_i += 1;
             }
 
-
-
-            let nothing = Block::default()
-                .style(
-                    Style::default().bg(colors.bg())
-                );
+            let nothing = Block::default().style(Style::default().bg(colors.bg()));
             frame.render_widget(nothing, chunks[3]);
-
-
         })?;
-
 
         for key in asi.by_ref().keys() {
             match key.unwrap() {
@@ -343,24 +313,21 @@ fn main() -> Result<(), io::Error> {
                 Key::Char('q') => {
                     terminal.clear()?;
                     return Ok(());
-                },
+                }
                 Key::Down => {
                     file.next_address();
-                },
+                }
                 Key::Up => {
                     file.previous_address();
-                },
+                }
                 Key::Right => {
                     file.next_offset();
-                },
+                }
                 Key::Left => {
                     file.previous_offset();
-                },
-                _ => ()
+                }
+                _ => (),
             }
         }
     }
-
-
-
 }

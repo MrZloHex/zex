@@ -1,14 +1,10 @@
-use tui::{
-    widgets::{TableState, ListState}
-};
-
-
+use tui::widgets::{ListState, TableState};
 
 #[derive(Clone)]
 pub struct StatefulList<T> {
     pub state: ListState,
     pub items: Vec<T>,
-    pub selected_row: usize
+    pub selected_row: usize,
 }
 
 impl<T> StatefulList<T> {
@@ -16,7 +12,7 @@ impl<T> StatefulList<T> {
         StatefulList {
             state: ListState::default(),
             items,
-            selected_row: 0
+            selected_row: 0,
         }
     }
 
@@ -51,7 +47,9 @@ impl<T> StatefulList<T> {
     pub fn unselect(&mut self) {
         self.selected_row = if let Some(offset) = self.state.selected() {
             offset
-        } else { self.selected_row };
+        } else {
+            self.selected_row
+        };
         self.state.select(None);
     }
 
@@ -59,7 +57,6 @@ impl<T> StatefulList<T> {
         self.state.select(Some(offset))
     }
 }
-
 
 #[derive(Clone)]
 pub struct StatefulTable<T> {
@@ -71,7 +68,7 @@ impl<T> StatefulTable<T> {
     pub fn new(items: Vec<Vec<T>>) -> StatefulTable<T> {
         StatefulTable {
             state: TableState::default(),
-            items
+            items,
         }
     }
     pub fn next(&mut self) {

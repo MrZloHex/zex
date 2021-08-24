@@ -93,8 +93,8 @@ fn main() -> Result<(), io::Error> {
                 .get_adresses()
                 .items
                 .iter()
-                .map(|i| {
-                    let lines = vec![Spans::from(Span::styled((*i).0, (*i).1))];
+                .map(|address| {
+                    let lines = vec![Spans::from(Span::styled((*address).0.clone(), (*address).1.clone()))];
                     ListItem::new(lines)
                 })
                 .collect();
@@ -166,8 +166,8 @@ fn main() -> Result<(), io::Error> {
                 let hex: Vec<ListItem> = column
                     .items
                     .iter()
-                    .map(|i| {
-                        let lines = vec![Spans::from(Span::styled((*i).0, (*i).1))];
+                    .map(|byte| {
+                        let lines = vec![Spans::from(Span::styled((*byte).0.clone(), (*byte).1))];
                         ListItem::new(lines)
                     })
                     .collect();
@@ -226,8 +226,8 @@ fn main() -> Result<(), io::Error> {
                 let ascii: Vec<ListItem> = column
                     .items
                     .iter()
-                    .map(|i| {
-                        let lines = vec![Spans::from(Span::styled((*i).0, (*i).1))];
+                    .map(|ch| {
+                        let lines = vec![Spans::from(Span::styled((*ch).0.clone(), (*ch).1))];
                         ListItem::new(lines)
                     })
                     .collect();
@@ -258,16 +258,16 @@ fn main() -> Result<(), io::Error> {
                     return Ok(());
                 }
                 Key::Down => {
-                    file.next_address();
+                    // file.next_address();
                 }
                 Key::Up => {
-                    file.previous_address();
+                    // file.previous_address();
                 }
                 Key::Right => {
-                    file.next_offset();
+                    // file.next_offset();
                 }
                 Key::Left => {
-                    file.previous_offset();
+                    // file.previous_offset();
                 }
                 _ => (),
             }

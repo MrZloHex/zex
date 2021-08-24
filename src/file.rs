@@ -35,8 +35,8 @@ impl File {
 
     fn chars_from_u8(bytes: &Vec<u8>) -> Vec<char> {
         let mut chars: Vec<char> = Vec::new();
-        for byte in *bytes {
-            chars.push(byte.clone() as char)
+        for byte in bytes {
+            chars.push((*byte).clone() as char)
         }
         chars
     }

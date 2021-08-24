@@ -16,7 +16,7 @@ impl ByteColors {
         }
     }
 
-    pub fn get_byte_color(&self, byte: &u8) -> Color {
+    pub fn get_byte_color(&self, byte: u8) -> Color {
         if *byte > 32 && *byte < 127 {
             self.ascii.clone()
         } else if *byte == 32 || *byte == 10 {

@@ -31,17 +31,7 @@ mod colors;
 use colors::{ColorPallete, ByteColors};
 
 
-fn make_char(ch: &char) -> String {
-    if ((*ch) as u8) > 32 && ((*ch) as u8) < 127 {
-        ch.to_string()
-    } else if (*ch) as u8 == 32 {
-        "_".to_string()
-    } else if (*ch) as u8 == 0 {
-        "0".to_string()
-    } else {
-        ".".to_string()
-    }
-}
+
 
 fn main() -> Result<(), io::Error> {
     let yaml = load_yaml!("cli.yaml");
@@ -119,7 +109,7 @@ fn main() -> Result<(), io::Error> {
                 .block(address_block)
                 .highlight_style(Style::default().bg(colors.slct()));
 
-            frame.render_stateful_widget(address_list, chunks[0], &mut file.get_adresses().state);
+            frame.render_stateful_widget(address_list, chunks[0], &mut display.get_adresses().state);
 
             // HEX
 
@@ -190,7 +180,7 @@ fn main() -> Result<(), io::Error> {
                 frame.render_stateful_widget(
                     hex_list,
                     hex_columns[hex_i],
-                    &mut file.get_hex_view()[column_i].state,
+                    &mut display.get_hex_view()[column_i].state,
                 );
                 column_i += 1;
                 hex_i += 2;
@@ -232,15 +222,12 @@ fn main() -> Result<(), io::Error> {
                 .split(chunks[2]);
 
             let mut column_i: usize = 0;
-            for column in file.get_ascii_view() {
+            for column in display.get_chars() {
                 let ascii: Vec<ListItem> = column
                     .items
                     .iter()
                     .map(|i| {
-                        let lines = vec![Spans::from(Span::styled(
-                            make_char(i),
-                            Style::default().fg(pick_color(&(*i as u8))),
-                        ))];
+                        let lines = vec![Spans::from(Span::styled((*i).0, (*i).1))];
                         ListItem::new(lines)
                     })
                     .collect();
@@ -254,7 +241,7 @@ fn main() -> Result<(), io::Error> {
                 frame.render_stateful_widget(
                     ascii_list,
                     ascii_columns[column_i],
-                    &mut file.get_ascii_view()[column_i].state,
+                    &mut display.get_chars()[column_i].state,
                 );
                 column_i += 1;
             }

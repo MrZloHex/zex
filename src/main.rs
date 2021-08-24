@@ -180,7 +180,7 @@ fn main() -> Result<(), io::Error> {
                 frame.render_stateful_widget(
                     hex_list,
                     hex_columns[hex_i],
-                    &mut display.get_hex_view()[column_i].state,
+                    &mut display.get_bytes()[column_i].state,
                 );
                 column_i += 1;
                 hex_i += 2;
@@ -189,7 +189,7 @@ fn main() -> Result<(), io::Error> {
                 //}
             }
 
-            // ACII
+            // ASCII
 
             let char_view_block = Block::default()
                 .title(Span::styled("ASCII", Style::default().fg(colors.tl())))

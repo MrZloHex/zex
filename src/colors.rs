@@ -4,6 +4,8 @@ use tui::style::Color;
 pub struct ByteColors {
     ascii: Color,
     space_line: Color,
+    buttons: Color,
+    sep_ctrl: Color,
     service_symbols: Color,
     zero: Color
 }
@@ -13,6 +15,8 @@ impl ByteColors {
         ByteColors {
             ascii: Color::Rgb(184, 187, 38),
             space_line: Color::Rgb(67, 133, 136),
+            buttons: Color::Rgb(250, 189, 47),
+            sep_ctrl: Color::Rgb(177, 98, 134),
             service_symbols: Color::Rgb(254, 128, 25),
             zero: Color::Rgb(146, 131, 116)
         }
@@ -24,7 +28,11 @@ impl ByteColors {
         } else if byte == 32 || byte == 10 {
             self.space_line.clone()
         } else if (byte > 0 && byte < 32) || byte == 127 {
-            self.service_symbols.clone()
+            match byte {
+                8 | 9 | 13 | 14 | 15 | 27 | 127 => self.buttons.clone(),
+                16..=20 | 28..=31 => self.sep_ctrl.clone(),
+                _ => self.service_symbols.clone()
+            }
         } else {
             self.zero.clone()
         }

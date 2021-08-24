@@ -27,53 +27,9 @@ mod stateful_widgets;
 mod display;
 use display::Display;
 
+mod colors;
+use colors::{ColorPallete, ByteColors};
 
-struct ColorPallete {
-    background: Color,
-    border_style: Color,
-    title: Color,
-    selected: Color,
-    text: Color,
-}
-
-impl ColorPallete {
-    pub fn new() -> Self {
-        ColorPallete {
-            background: Color::Rgb(20, 20, 20),
-            border_style: Color::Rgb(150, 150, 150),
-            title: Color::Rgb(200, 200, 200),
-            selected: Color::Rgb(100, 100, 100),
-            text: Color::Rgb(200, 200, 200),
-        }
-    }
-    pub fn bg(&self) -> Color {
-        self.background.clone()
-    }
-    pub fn bs(&self) -> Color {
-        self.border_style.clone()
-    }
-    pub fn tl(&self) -> Color {
-        self.title.clone()
-    }
-    pub fn slct(&self) -> Color {
-        self.selected.clone()
-    }
-    pub fn text(&self) -> Color {
-        self.text.clone()
-    }
-}
-
-fn pick_color(byte: &u8) -> Color {
-    if *byte > 32 && *byte < 127 {
-        Color::Rgb(79, 141, 195)
-    } else if *byte == 32 || *byte == 10 {
-        Color::Rgb(240, 157, 48)
-    } else if *byte > 0 && *byte < 32 {
-        Color::Rgb(123, 230, 126)
-    } else {
-        Color::Rgb(200, 200, 200)
-    }
-}
 
 fn make_char(ch: &char) -> String {
     if ((*ch) as u8) > 32 && ((*ch) as u8) < 127 {
@@ -97,9 +53,10 @@ fn main() -> Result<(), io::Error> {
     };
 
     let file = File::new(filename);
-    let mut display = Display::new(file);
+    let colors = ColorPallete::new();
+    let mut display = Display::new(file, colors.clone());
 
-    let colors = Colors::new();
+    
 
     // tui
 
@@ -140,12 +97,14 @@ fn main() -> Result<(), io::Error> {
                 )
                 .split(chunks[0]);
 
-            let addresses: Vec<ListItem> = file
+            // ADDRESSES
+
+            let addresses: Vec<ListItem> = display
                 .get_adresses()
                 .items
                 .iter()
                 .map(|i| {
-                    let lines = vec![Spans::from((*i).clone())];
+                    let lines = vec![Spans::from(Span::styled((*i).0, (*i).1))];
                     ListItem::new(lines)
                 })
                 .collect();
@@ -213,15 +172,12 @@ fn main() -> Result<(), io::Error> {
 
             let mut column_i: usize = 0;
             let mut hex_i: usize = 1;
-            for column in file.get_hex_view() {
+            for column in display.get_bytes() {
                 let hex: Vec<ListItem> = column
                     .items
                     .iter()
                     .map(|i| {
-                        let lines = vec![Spans::from(Span::styled(
-                            format!("{:>0w$X}", *i, w = 2),
-                            Style::default().fg(pick_color(i)),
-                        ))];
+                        let lines = vec![Spans::from(Span::styled((*i).0, (*i).1))];
                         ListItem::new(lines)
                     })
                     .collect();

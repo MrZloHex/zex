@@ -41,18 +41,6 @@ impl File {
         chars
     }
 
-    fn get_addresses_fom_length(data: &Vec<u8>) -> Vec<String> {
-        let mut addresses: Vec<String> = Vec::new();
-
-        for i in 0..data.len() {
-            if (i % 16) == 0 {
-                addresses.push(format!("{:>0width$X}", i, width = 10))
-            }
-        }
-
-        addresses
-    }
-
     fn get_hex_data(data: &Vec<u8>) -> Vec<StatefulList<u8>> {
         let mut vec_0 = Vec::new();
         let mut vec_1 = Vec::new();

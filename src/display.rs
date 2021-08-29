@@ -66,7 +66,7 @@ impl Display {
     }
 
     pub fn next_offset(&mut self) {
-        if self.h_offset != self.max_h_offset {
+        if self.h_offset != self.max_h_offset && !(self.max_v_offset[self.h_offset] != self.max_v_offset[self.h_offset+1] && self.v_offset == self.max_v_offset[self.h_offset]) {
             self.h_offset += 1;
         }
     }
@@ -154,22 +154,22 @@ fn make_bytes(bytes: Vec<u8>, color: ByteColors) -> (Vec<StatefulList<(String, S
         offset += 1;
     }
     let length: [usize; 16] = [
-        vec_0.len(),
-        vec_1.len(),
-        vec_2.len(),
-        vec_3.len(),
-        vec_4.len(),
-        vec_5.len(),
-        vec_6.len(),
-        vec_7.len(),
-        vec_8.len(),
-        vec_9.len(),
-        vec_10.len(),
-        vec_11.len(),
-        vec_12.len(),
-        vec_13.len(),
-        vec_14.len(),
-        vec_15.len(),
+        vec_0.len()-1,
+        vec_1.len()-1,
+        vec_2.len()-1,
+        vec_3.len()-1,
+        vec_4.len()-1,
+        vec_5.len()-1,
+        vec_6.len()-1,
+        vec_7.len()-1,
+        vec_8.len()-1,
+        vec_9.len()-1,
+        vec_10.len()-1,
+        vec_11.len()-1,
+        vec_12.len()-1,
+        vec_13.len()-1,
+        vec_14.len()-1,
+        vec_15.len()-1,
     ];
 
     let hex = vec![

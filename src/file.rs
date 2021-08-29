@@ -1,8 +1,6 @@
 use std::fs;
 use std::io::Read;
 
-use super::stateful_widgets::StatefulList;
-
 #[derive(Clone)]
 pub struct File {
     filename: String,
@@ -58,50 +56,3 @@ impl File {
         self.length.clone()
     }
 }
-
-
-// pub fn next_address(&mut self) {
-    //     self.addresses.next();
-    //     self.hex_view[self.horizontal_offset].next();
-    //     self.ascii_view[self.horizontal_offset].next()
-    // }
-
-    // pub fn previous_address(&mut self) {
-    //     self.addresses.previous();
-    //     self.hex_view[self.horizontal_offset].previous();
-    //     self.ascii_view[self.horizontal_offset].previous()
-    // }
-
-    // pub fn next_offset(&mut self) {
-    //     // UNSELECT PREVIOUS
-    //     self.hex_view[self.horizontal_offset].unselect();
-    //     self.ascii_view[self.horizontal_offset].unselect();
-    //     // GET VERTICAL OFFSET
-    //     let v_offset = self.hex_view[self.horizontal_offset].selected_row;
-    //     // INCREMENT OFFSET
-    //     self.horizontal_offset += 1;
-    //     if self.horizontal_offset == 16 {
-    //         self.horizontal_offset = 0;
-    //     }
-
-    //     // SELECT RIGHT COLUMN
-    //     self.hex_view[self.horizontal_offset].select(v_offset.clone());
-    //     self.ascii_view[self.horizontal_offset].select(v_offset)
-    // }
-
-    // pub fn previous_offset(&mut self) {
-    //     // UNSELECT PREVIOUS
-    //     self.hex_view[self.horizontal_offset].unselect();
-    //     self.ascii_view[self.horizontal_offset].unselect();
-    //     // GET VERTICAL OFFSET
-    //     let v_offset = self.hex_view[self.horizontal_offset].selected_row;
-    //     // DECREMENT OFFSET
-    //     if self.horizontal_offset == 0 {
-    //         self.horizontal_offset = 16;
-    //     }
-    //     self.horizontal_offset -= 1;
-
-    //     // SELECT RIGHT COLUMN
-    //     self.hex_view[self.horizontal_offset].select(v_offset.clone());
-    //     self.ascii_view[self.horizontal_offset].select(v_offset)
-    // }

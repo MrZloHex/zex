@@ -177,7 +177,7 @@ fn main() -> Result<(), io::Error> {
 
                 let hex_list = List::new(hex)
                     .block(hex_block)
-                    .highlight_style(Style::default().bg(colors.slct()));
+                    .highlight_style(display.get_hl_style(column_i.clone()));
                 frame.render_stateful_widget(
                     hex_list,
                     hex_columns[hex_i],
@@ -237,7 +237,7 @@ fn main() -> Result<(), io::Error> {
 
                 let ascii_list = List::new(ascii)
                     .block(ascii_block)
-                    .highlight_style(Style::default().bg(colors.slct()));
+                    .highlight_style(display.get_hl_style(column_i.clone()));
 
                 frame.render_stateful_widget(
                     ascii_list,

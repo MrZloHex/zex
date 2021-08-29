@@ -56,4 +56,8 @@ impl<T> StatefulList<T> {
     pub fn select(&mut self, offset: usize) {
         self.state.select(Some(offset))
     }
+
+    pub fn srcoll_down(&mut self) {
+        
+    }
 }

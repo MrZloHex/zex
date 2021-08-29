@@ -14,8 +14,11 @@ pub struct Display {
 
     h_offset: usize,
     v_offset: usize,
+
     max_v_offset: [usize; 16],
-    max_h_offset: usize
+    max_h_offset: usize,
+
+    colors: ColorPallete
 }
 
 impl Display {
@@ -32,7 +35,9 @@ impl Display {
             h_offset: 0,
             v_offset: 0,
             max_v_offset,
-            max_h_offset: 15
+            max_h_offset: 15,
+
+            colors
         }
     }
 
@@ -79,14 +84,18 @@ impl Display {
 
     pub fn update_cursor_pos(&mut self) {
         self.addresses.select(self.v_offset.clone());
+
         for i in 0..=self.max_h_offset {
-            if self.h_offset == i {
-                self.bytes[i].select(self.v_offset.clone());
-                self.chars[i].select(self.v_offset.clone());
-            } else {
-                self.bytes[i].unselect();
-                self.chars[i].unselect();
-            }
+            self.bytes[i].select(self.v_offset.clone());
+            self.chars[i].select(self.v_offset.clone());
+        }
+    }
+
+    pub fn get_hl_style(&mut self, index: usize) -> Style {
+        if index == self.h_offset {
+            Style::default().bg(self.colors.slct())
+        } else {
+            Style::default().bg(self.colors.bg())
         }
     }
 }

@@ -53,7 +53,7 @@ impl Display {
 
 
     pub fn next_address(&mut self) {
-        if self.v_offset != self.max_v_offset[self.max_h_offset] { 
+        if self.v_offset != self.max_v_offset[self.h_offset] { 
             self.v_offset += 1;
 
         }

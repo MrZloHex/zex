@@ -265,10 +265,10 @@ fn main() -> Result<(), io::Error> {
                     display.prev_address();
                 }
                 Key::Right => {
-                    // file.next_offset();
+                    display.next_offset();
                 }
                 Key::Left => {
-                    // file.previous_offset();
+                    display.prev_offset();
                 }
                 _ => (),
             }

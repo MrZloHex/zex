@@ -2,6 +2,7 @@ use crate::file::File;
 use crate::stateful_widgets::StatefulList;
 use crate::colors::{ColorPallete, ByteColors};
 
+use termion::color;
 use tui::style::Style;
 use tui::style::Color;
 
@@ -24,8 +25,8 @@ pub struct Display {
 impl Display {
     pub fn new(file: File, colors: ColorPallete) -> Display {
         let addresses = make_addresses(file.get_length(), colors.text());
-        let (bytes, max_v_offset) = make_bytes(file.get_bytes(), colors.bc());
-        let chars = make_chars(file.get_chars(), colors.bc());
+        let (bytes, max_v_offset) = make_bytes(file.get_bytes(), colors.bc(), colors.bg());
+        let chars = make_chars(file.get_chars(), colors.bc(), colors.bg());
 
         Display {
             addresses,
@@ -118,7 +119,7 @@ fn make_addresses(length: usize, color: Color) -> StatefulList<(String, Style)> 
 }
 
 
-fn make_bytes(bytes: Vec<u8>, color: ByteColors) -> (Vec<StatefulList<(String, Style)>>, [usize; 16]) {
+fn make_bytes(bytes: Vec<u8>, color: ByteColors, bg: Color) -> (Vec<StatefulList<(String, Style)>>, [usize; 16]) {
     let mut vec_0 = Vec::new();
     let mut vec_1 = Vec::new();
     let mut vec_2 = Vec::new();
@@ -181,6 +182,31 @@ fn make_bytes(bytes: Vec<u8>, color: ByteColors) -> (Vec<StatefulList<(String, S
         vec_15.len()-1,
     ];
 
+    let max_length: usize = length[0];
+    let filler = ("  ".to_string(), Style::default().fg(bg));
+    for i in 0..16 {
+        if length[i] < max_length {
+            match i {
+                1 => vec_1.push(filler.clone()),
+                2 => vec_2.push(filler.clone()),
+                3 => vec_3.push(filler.clone()),
+                4 => vec_4.push(filler.clone()),
+                5 => vec_5.push(filler.clone()),
+                6 => vec_6.push(filler.clone()),
+                7 => vec_7.push(filler.clone()),
+                8 => vec_8.push(filler.clone()),
+                9 => vec_9.push(filler.clone()),
+                10 => vec_10.push(filler.clone()),
+                11 => vec_11.push(filler.clone()),
+                12 => vec_12.push(filler.clone()),
+                13 => vec_13.push(filler.clone()),
+                14 => vec_14.push(filler.clone()),
+                15 => vec_15.push(filler.clone()),
+                _ => ()
+            }
+        }
+    }
+
     let hex = vec![
         StatefulList::new(vec_0),
         StatefulList::new(vec_1),
@@ -203,7 +229,7 @@ fn make_bytes(bytes: Vec<u8>, color: ByteColors) -> (Vec<StatefulList<(String, S
     (hex, length)
 }
 
-fn make_chars(bytes: Vec<char>, color: ByteColors) -> Vec<StatefulList<(String, Style)>> {
+fn make_chars(bytes: Vec<char>, color: ByteColors, bg: Color) -> Vec<StatefulList<(String, Style)>> {
     let mut vec_0 = Vec::new();
         let mut vec_1 = Vec::new();
         let mut vec_2 = Vec::new();
@@ -247,6 +273,51 @@ fn make_chars(bytes: Vec<char>, color: ByteColors) -> Vec<StatefulList<(String, 
             }
             offset += 1;
         }
+
+        let length: [usize; 16] = [
+            vec_0.len()-1,
+            vec_1.len()-1,
+            vec_2.len()-1,
+            vec_3.len()-1,
+            vec_4.len()-1,
+            vec_5.len()-1,
+            vec_6.len()-1,
+            vec_7.len()-1,
+            vec_8.len()-1,
+            vec_9.len()-1,
+            vec_10.len()-1,
+            vec_11.len()-1,
+            vec_12.len()-1,
+            vec_13.len()-1,
+            vec_14.len()-1,
+            vec_15.len()-1,
+        ];
+
+        let max_length: usize = length[0];
+        let filler = ("  ".to_string(), Style::default().fg(bg));
+        for i in 0..16 {
+            if length[i] < max_length {
+                match i {
+                    1 => vec_1.push(filler.clone()),
+                    2 => vec_2.push(filler.clone()),
+                    3 => vec_3.push(filler.clone()),
+                    4 => vec_4.push(filler.clone()),
+                    5 => vec_5.push(filler.clone()),
+                    6 => vec_6.push(filler.clone()),
+                    7 => vec_7.push(filler.clone()),
+                    8 => vec_8.push(filler.clone()),
+                    9 => vec_9.push(filler.clone()),
+                    10 => vec_10.push(filler.clone()),
+                    11 => vec_11.push(filler.clone()),
+                    12 => vec_12.push(filler.clone()),
+                    13 => vec_13.push(filler.clone()),
+                    14 => vec_14.push(filler.clone()),
+                    15 => vec_15.push(filler.clone()),
+                    _ => ()
+                }
+            }
+        }
+
         let ascii = vec![
             StatefulList::new(vec_0),
             StatefulList::new(vec_1),

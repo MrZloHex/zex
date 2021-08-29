@@ -13,12 +13,14 @@ pub struct Display {
     chars: Vec<StatefulList<(String, Style)>>,
 
     h_offset: usize,
-    v_offset: usize
+    v_offset: usize,
+    max_v_offset: usize,
+    max_h_offset: usize
 }
 
 impl Display {
     pub fn new(file: File, colors: ColorPallete) -> Display {
-        let addresses = make_addresses(file.get_length(), colors.text());
+        let (addresses, max_v_offset) = make_addresses(file.get_length(), colors.text());
         let bytes = make_bytes(file.get_bytes(), colors.bc());
         let chars = make_chars(file.get_chars(), colors.bc());
 
@@ -28,7 +30,9 @@ impl Display {
             chars,
 
             h_offset: 0,
-            v_offset: 0
+            v_offset: 0,
+            max_v_offset,
+            max_h_offset: 15
         }
     }
 
@@ -44,9 +48,28 @@ impl Display {
     pub fn get_chars(&mut self) -> Vec<StatefulList<(String, Style)>> {
         self.chars.clone()
     }
+
+
+
+
+    pub fn next_address(&mut self) {
+        if self.v_offset != self.max_v_offset { 
+            self.v_offset += 1;
+        }
+    }
+
+    pub fn prev_address(&mut self) {
+        if self.v_offset != 0 { 
+            self.v_offset -= 1;
+        }
+    }
+
+    pub fn update_cursor_pos(&mut self) {
+        self.addresses.select(self.v_offset.clone());
+    }
 }
 
-fn make_addresses(length: usize, color: Color) -> StatefulList<(String, Style)> {
+fn make_addresses(length: usize, color: Color) -> (StatefulList<(String, Style)>, usize) {
     let mut vec_addresses: Vec<(String, Style)> = Vec::new();
 
     for i in 0..length {
@@ -58,7 +81,7 @@ fn make_addresses(length: usize, color: Color) -> StatefulList<(String, Style)> 
         }
     }
 
-    StatefulList::new(vec_addresses)
+    (StatefulList::new(vec_addresses.clone()), vec_addresses.len()-1)
 }
 
 

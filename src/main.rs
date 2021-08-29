@@ -60,6 +60,7 @@ fn main() -> Result<(), io::Error> {
     terminal.clear()?;
 
     loop {
+        display.update_cursor_pos();
         terminal.draw(|frame| {
             let chunks = Layout::default()
                 .direction(Direction::Vertical)
@@ -258,10 +259,10 @@ fn main() -> Result<(), io::Error> {
                     return Ok(());
                 }
                 Key::Down => {
-                    // file.next_address();
+                    display.next_address();
                 }
                 Key::Up => {
-                    // file.previous_address();
+                    display.prev_address();
                 }
                 Key::Right => {
                     // file.next_offset();

@@ -2,9 +2,17 @@ use crate::file::File;
 use crate::stateful_widgets::StatefulList;
 use crate::colors::{ColorPallete, ByteColors};
 
+use unicode_width::UnicodeWidthStr;
 use termion::color;
 use tui::style::Style;
 use tui::style::Color;
+
+
+#[derive(Clone)]
+pub enum InputMode {
+    Normal,
+    Editing
+}
 
 
 #[derive(Clone)]
@@ -19,7 +27,10 @@ pub struct Display {
     max_v_offset: [usize; 16],
     max_h_offset: usize,
 
-    colors: ColorPallete
+    colors: ColorPallete,
+
+    command: String,
+    pub input: InputMode
 }
 
 impl Display {
@@ -38,7 +49,10 @@ impl Display {
             max_v_offset,
             max_h_offset: 15,
 
-            colors
+            colors,
+            
+            command: String::new(),
+            input: InputMode::Normal
         }
     }
 
@@ -98,6 +112,24 @@ impl Display {
         } else {
             Style::default().bg(self.colors.bg())
         }
+    }
+
+
+
+    pub fn push_ch_command(&mut self, ch: char) {
+        self.command.push(ch);
+    }
+
+    pub fn pop_command(&mut self) {
+        self.command.pop();
+    }
+
+    pub fn command_width(&mut self) -> usize {
+        self.command.width()
+    }
+
+    pub fn get_command(&mut self) -> String {
+        self.command.clone()
     }
 }
 

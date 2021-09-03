@@ -182,4 +182,5 @@ dependencies = [
  "clap",
  "termion",
  "tui",
+ "unicode-width",
 ]

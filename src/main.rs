@@ -10,14 +10,7 @@ use termion::{
     screen::AlternateScreen,
 };
 
-use tui::{
-    backend::TermionBackend,
-    layout::{Constraint, Direction, Layout},
-    style::{Color, Style},
-    text::{Span, Spans},
-    widgets::{Block, Borders, List, ListItem},
-    Terminal,
-};
+use tui::{Terminal, backend::TermionBackend, layout::{Constraint, Direction, Layout}, style::{Color, Style}, text::{Span, Spans}, widgets::{Block, Borders, List, ListItem, Paragraph}};
 
 mod file;
 use file::File;
@@ -25,7 +18,7 @@ use file::File;
 mod stateful_widgets;
 
 mod display;
-use display::Display;
+use display::{Display, InputMode};
 
 mod colors;
 use colors::{ColorPallete, ByteColors};
@@ -59,9 +52,17 @@ fn main() -> Result<(), io::Error> {
 
     terminal.clear()?;
 
+    let mut statement = true;
+
     loop {
+        if !statement {
+            terminal.clear();
+            return Ok(());
+        }
+
         display.update_cursor_pos();
         terminal.draw(|frame| {
+
             let chunks = Layout::default()
                 .direction(Direction::Vertical)
                 .constraints([Constraint::Percentage(96), Constraint::Percentage(4)].as_ref())
@@ -72,8 +73,22 @@ fn main() -> Result<(), io::Error> {
                 .borders(Borders::ALL)
                 .border_style(Style::default().fg(colors.bs()))
                 .style(Style::default().bg(colors.bg()));
+            let command_str = display.get_command();
+            let command = Paragraph::new(command_str.as_ref())
+                .block(command_block);
 
-            frame.render_widget(command_block, chunks[1]);
+            frame.render_widget(command, chunks[1]);
+            match display.input {
+                InputMode::Normal => {}
+                InputMode::Editing => {
+                    frame.set_cursor(
+                        chunks[1].x + display.command_width() as u16 + 1,
+                        chunks[1].y + 1
+                    )
+                }
+            }
+
+
 
             let chunks = Layout::default()
                 .direction(Direction::Horizontal)
@@ -252,26 +267,50 @@ fn main() -> Result<(), io::Error> {
         })?;
 
         for key in asi.by_ref().keys() {
-            match key.unwrap() {
-                // If any of them is q, quit
-                Key::Char('q') => {
-                    terminal.clear()?;
-                    return Ok(());
+            match display.input {
+                InputMode::Normal => match key.unwrap() {
+                    Key::Down => {
+                        display.next_address();
+                    }
+                    Key::Up => {
+                        display.prev_address();
+                    }
+                    Key::Right => {
+                        display.next_offset();
+                    }
+                    Key::Left => {
+                        display.prev_offset();
+                    }
+                    Key::Char(':') => {
+                        display.input = InputMode::Editing;
+                        display.push_ch_command(':');
+                    }
+                    _ => ()
+                },
+
+                InputMode::Editing => match key.unwrap() {
+                    Key::Char('\n') => {
+                        execute_command(display.get_command().drain(..).collect(),  &mut statement)
+                    }
+                    Key::Esc => {
+                        display.input = InputMode::Normal
+                    }
+                    Key::Char(ch) => {
+                        display.push_ch_command(ch);
+                    }
+                    Key::Backspace => {
+                        display.pop_command();
+                    }
+                    _ => ()
                 }
-                Key::Down => {
-                    display.next_address();
-                }
-                Key::Up => {
-                    display.prev_address();
-                }
-                Key::Right => {
-                    display.next_offset();
-                }
-                Key::Left => {
-                    display.prev_offset();
-                }
-                _ => (),
             }
         }
+    }
+}
+
+
+fn execute_command(command: String, state: &mut bool) {
+    if command.eq(":q") {
+        *state = false;
     }
 }

@@ -1,4 +1,4 @@
-use tui::widgets::{ListState, TableState};
+use tui::widgets::ListState;
 
 #[derive(Clone)]
 pub struct StatefulList<T> {

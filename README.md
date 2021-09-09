@@ -2,7 +2,7 @@
 
 ## What is ZEX?
 
-It's a HEX viewer, soon editor, may be one day it will be disassembler also.
+It's a HEX viewer, soon editor, maybe one day it will be a disassembler also.
 
 ## RoadMap
 
@@ -13,3 +13,4 @@ It's a HEX viewer, soon editor, may be one day it will be disassembler also.
  - [ ] Hex Editor
  - [ ] ? Disassembler ?
 
+## Deployment

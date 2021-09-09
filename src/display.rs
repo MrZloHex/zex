@@ -3,7 +3,6 @@ use crate::stateful_widgets::StatefulList;
 use crate::colors::{ColorPallete, ByteColors};
 
 use unicode_width::UnicodeWidthStr;
-use termion::color;
 use tui::style::Style;
 use tui::style::Color;
 

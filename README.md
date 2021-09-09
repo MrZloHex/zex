@@ -14,3 +14,37 @@ It's a HEX viewer, soon editor, maybe one day it will be a disassembler also.
  - [ ] ? Disassembler ?
 
 ## Deployment
+
+**NOTE**</br>
+YOU SHOULD HAVE RUST AND CARGO TO INSTALL THIS HEX VIEWER
+
+### Rust Installation
+
+Try run: `$ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`
+
+And see official [guide](https://www.rust-lang.org/tools/install).
+
+For `cargo` try this:
+ - Ubuntu / Debian `$ sudo apt-get install cargo`
+ - Arch `$ sudo pacman -S cargo`
+
+Or see official [guide](https://github.com/rust-lang/cargo)
+
+### Installation
+
+1. Download or clone this repo:
+	- Git: `$ git clone https://github.com/MrZloHex/zex.git`
+2. Change working directory to *lscc*:
+	- `$ cd zex`
+3. Run *installation* script:
+	- `$ ./deployment.sh -i`
+	- **NOTE** You need to have **sudo** access.
+
+### Uninstallation
+
+1. Change working directory to *lscc*:
+	- `$ cd zex`
+2. Run *uninstallation* script:
+	- `$ ./deployment.sh -u`
+3. Go out from directory:
+	- `$ cd ..`

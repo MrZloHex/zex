@@ -200,9 +200,6 @@ fn main() -> Result<(), io::Error> {
                 );
                 column_i += 1;
                 hex_i += 2;
-                //if hex_i == 15 {
-                //    hex_i = 18;
-                //}
             }
 
             // ASCII

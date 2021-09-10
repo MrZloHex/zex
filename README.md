@@ -48,3 +48,9 @@ Or see official [guide](https://github.com/rust-lang/cargo)
 	- `$ ./deployment.sh -u`
 3. Go out from directory:
 	- `$ cd ..`
+
+## Usage
+
+List of commands:
+ - :q - quit
+

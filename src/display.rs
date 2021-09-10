@@ -119,8 +119,16 @@ impl Display {
         self.command.push(ch);
     }
 
+    pub fn set_command(&mut self, s: String) {
+        self.command = s;
+    }
+
     pub fn pop_command(&mut self) {
         self.command.pop();
+    }
+
+    pub fn clear_command(&mut self) {
+        self.command = "".to_string();
     }
 
     pub fn command_width(&mut self) -> usize {

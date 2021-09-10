@@ -263,6 +263,7 @@ fn main() -> Result<(), io::Error> {
             frame.render_widget(nothing, chunks[3]);
         })?;
 
+
         for key in asi.by_ref().keys() {
             match display.input {
                 InputMode::Normal => match key.unwrap() {
@@ -280,14 +281,25 @@ fn main() -> Result<(), io::Error> {
                     }
                     Key::Char(':') => {
                         display.input = InputMode::Editing;
-                        display.push_ch_command(':');
+                        if !display.get_command().is_empty() {
+                            if display.get_command().chars().nth(0).unwrap() != ':' {
+                                display.set_command(":".to_string());
+                            }
+                        } else {
+                            display.push_ch_command(':');
+                        }
                     }
                     _ => ()
                 },
-
                 InputMode::Editing => match key.unwrap() {
                     Key::Char('\n') => {
-                        execute_command(display.get_command().drain(..).collect(),  &mut statement)
+                        match execute_command(display.get_command().drain(..).collect(),  &mut statement) {
+                            Ok(_) => (),
+                            Err(_) => {
+                                display.set_command("Incorrect command, check README for commands".to_string());
+                                display.input = InputMode::Normal;
+                            }
+                        }
                     }
                     Key::Esc => {
                         display.input = InputMode::Normal
@@ -306,8 +318,11 @@ fn main() -> Result<(), io::Error> {
 }
 
 
-fn execute_command(command: String, state: &mut bool) {
+fn execute_command(command: String, state: &mut bool) -> Result<(), ()> {
     if command.eq(":q") {
         *state = false;
+        Ok(())
+    } else {
+        Err(())
     }
 }

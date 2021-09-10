@@ -35,7 +35,7 @@ fn main() -> Result<(), io::Error> {
         panic!("You should set filname");
     };
 
-    let file = File::new(filename);
+    let mut file = File::new(filename);
     let colors = ColorPallete::new();
     let mut display = Display::new(file, colors.clone());
 
@@ -293,7 +293,7 @@ fn main() -> Result<(), io::Error> {
                 },
                 InputMode::Editing => match key.unwrap() {
                     Key::Char('\n') => {
-                        match execute_command(display.get_command().drain(..).collect(),  &mut statement) {
+                        match execute_command(display.get_command().drain(..).collect(),  &mut statement, &mut display) {
                             Ok(_) => (),
                             Err(_) => {
                                 display.set_command("Incorrect command, check README for commands".to_string());
@@ -318,9 +318,12 @@ fn main() -> Result<(), io::Error> {
 }
 
 
-fn execute_command(command: String, state: &mut bool) -> Result<(), ()> {
+fn execute_command(command: String, state: &mut bool, display: &mut Display) -> Result<(), ()> {
     if command.eq(":q") {
         *state = false;
+        Ok(())
+    } else if command.starts_with(":chbt") {
+        display.set_command("nice".to_string());
         Ok(())
     } else {
         Err(())

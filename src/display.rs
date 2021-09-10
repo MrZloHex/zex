@@ -16,6 +16,8 @@ pub enum InputMode {
 
 #[derive(Clone)]
 pub struct Display {
+    file: File,
+
     addresses: StatefulList<(String, Style)>,
     bytes: Vec<StatefulList<(String, Style)>>,
     chars: Vec<StatefulList<(String, Style)>>,
@@ -33,12 +35,13 @@ pub struct Display {
 }
 
 impl Display {
-    pub fn new(file: File, colors: ColorPallete) -> Display {
-        let addresses = make_addresses(file.get_length(), colors.text());
-        let (bytes, max_v_offset) = make_bytes(file.get_bytes(), colors.bc(), colors.bg());
-        let chars = make_chars(file.get_chars(), colors.bc(), colors.bg());
+    pub fn new(fl: File, colors: ColorPallete) -> Display {
+        let addresses = make_addresses(fl.get_length(), colors.text());
+        let (bytes, max_v_offset) = make_bytes(fl.get_bytes(), colors.bc(), colors.bg());
+        let chars = make_chars(fl.get_chars(), colors.bc(), colors.bg());
 
         Display {
+            file: fl,
             addresses,
             bytes,
             chars,
@@ -125,10 +128,6 @@ impl Display {
 
     pub fn pop_command(&mut self) {
         self.command.pop();
-    }
-
-    pub fn clear_command(&mut self) {
-        self.command = "".to_string();
     }
 
     pub fn command_width(&mut self) -> usize {

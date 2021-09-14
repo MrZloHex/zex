@@ -58,8 +58,9 @@ impl Display {
         }
     }
 
-    fn update(&mut self) {
-
+    pub fn update(&mut self) {
+        self.bytes = make_bytes(self.file.get_bytes(), self.colors.bc(), self.colors.bg()).0;
+        self.chars = make_chars(self.file.get_chars(), self.colors.bc(), self.colors.bg());
     } 
 
 
@@ -147,9 +148,6 @@ impl Display {
         let offset = (self.v_offset * 16) + self.h_offset;
         self.file.set_byte(new_value, offset.clone());
         self.file.set_char(new_value as char, offset);
-
-        self.update();
-
     }
 }
 

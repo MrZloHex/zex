@@ -53,6 +53,7 @@ fn main() -> Result<(), io::Error> {
     terminal.clear()?;
 
     let mut statement = true;
+    let mut last_command_succes = true;
     // let mut update = false;
 
     loop {
@@ -288,7 +289,7 @@ fn main() -> Result<(), io::Error> {
                     Key::Char(':') => {
                         display.input = InputMode::Editing;
                         if !display.get_command().is_empty() {
-                            if display.get_command().chars().nth(0).unwrap() != ':' {
+                            if display.get_command().chars().nth(0).unwrap() != ':' || last_command_succes {
                                 display.set_command(":".to_string());
                             }
                         } else {
@@ -299,10 +300,13 @@ fn main() -> Result<(), io::Error> {
                 },
                 InputMode::Editing => match key.unwrap() {
                     Key::Char('\n') => {
-                        match execute_command(display.get_command().drain(..).collect(),  &mut statement, &mut display) {
-                            Err(_) => display.input = InputMode::Normal,
-                            _ => ()
-                        }
+                        execute_command(
+                            display.get_command().drain(..).collect(),  
+                            &mut statement, 
+                            &mut last_command_succes,
+                             &mut display
+                        );
+                        display.input = InputMode::Normal;
                     }
                     Key::Esc => {
                         display.input = InputMode::Normal
@@ -321,23 +325,25 @@ fn main() -> Result<(), io::Error> {
 }
 
 
-fn execute_command(command: String, state: &mut bool, display: &mut Display) -> Result<(), ()> {
+fn execute_command(command: String, state: &mut bool, command_state: &mut bool, display: &mut Display) {
     if command.eq(":q") {
         *state = false;
-        Ok(())
     } else if command.starts_with(":c") {
         let new_value = match display.get_command().strip_prefix(":c").unwrap().parse::<u8>() {
             Ok(u) => u,
             Err(_) => {
                 display.set_command("Incorrect value to write (from 0 to 255)".to_string());
-                return Err(())
+                *command_state = false;
+                return;
             }
         };
         display.set_byte(new_value);
+        display.update();
+        *command_state = true;
         // *update = true;
-        Ok(())
     } else {
         display.set_command("Incorrect command, check README for commands".to_string());
-        Err(())
+        *command_state = false;
+        return
     }
 }

@@ -35,7 +35,7 @@ fn main() -> Result<(), io::Error> {
         panic!("You should set filname");
     };
 
-    let mut file = File::new(filename);
+    let file = File::new(filename);
     let colors = ColorPallete::new();
     let mut display = Display::new(file, colors.clone());
 
@@ -53,12 +53,18 @@ fn main() -> Result<(), io::Error> {
     terminal.clear()?;
 
     let mut statement = true;
+    // let mut update = false;
 
     loop {
         if !statement {
-            terminal.clear();
+            terminal.clear()?;
             return Ok(());
         }
+
+        // if update {
+        //     update = false;
+        //     display.update();
+        // }
 
         display.update_cursor_pos();
         terminal.draw(|frame| {
@@ -294,11 +300,8 @@ fn main() -> Result<(), io::Error> {
                 InputMode::Editing => match key.unwrap() {
                     Key::Char('\n') => {
                         match execute_command(display.get_command().drain(..).collect(),  &mut statement, &mut display) {
-                            Ok(_) => (),
-                            Err(_) => {
-                                display.set_command("Incorrect command, check README for commands".to_string());
-                                display.input = InputMode::Normal;
-                            }
+                            Err(_) => display.input = InputMode::Normal,
+                            _ => ()
                         }
                     }
                     Key::Esc => {
@@ -322,10 +325,19 @@ fn execute_command(command: String, state: &mut bool, display: &mut Display) -> 
     if command.eq(":q") {
         *state = false;
         Ok(())
-    } else if command.starts_with(":chbt") {
-        display.set_command("nice".to_string());
+    } else if command.starts_with(":c") {
+        let new_value = match display.get_command().strip_prefix(":c").unwrap().parse::<u8>() {
+            Ok(u) => u,
+            Err(_) => {
+                display.set_command("Incorrect value to write (from 0 to 255)".to_string());
+                return Err(())
+            }
+        };
+        display.set_byte(new_value);
+        // *update = true;
         Ok(())
     } else {
+        display.set_command("Incorrect command, check README for commands".to_string());
         Err(())
     }
 }

@@ -35,7 +35,7 @@ pub struct Display {
 }
 
 impl Display {
-    pub fn new(fl: File, colors: ColorPallete) -> Display {
+    pub fn new(mut fl: File, colors: ColorPallete) -> Display {
         let addresses = make_addresses(fl.get_length(), colors.text());
         let (bytes, max_v_offset) = make_bytes(fl.get_bytes(), colors.bc(), colors.bg());
         let chars = make_chars(fl.get_chars(), colors.bc(), colors.bg());
@@ -57,6 +57,10 @@ impl Display {
             input: InputMode::Normal
         }
     }
+
+    fn update(&mut self) {
+
+    } 
 
 
     pub fn get_adresses(&mut self) -> StatefulList<(String, Style)> {
@@ -136,6 +140,16 @@ impl Display {
 
     pub fn get_command(&mut self) -> String {
         self.command.clone()
+    }
+
+
+    pub fn set_byte(&mut self, new_value: u8) {
+        let offset = (self.v_offset * 16) + self.h_offset;
+        self.file.set_byte(new_value, offset.clone());
+        self.file.set_char(new_value as char, offset);
+
+        self.update();
+
     }
 }
 

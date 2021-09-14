@@ -40,19 +40,28 @@ impl File {
     }
 
     // INTERFACE
-    pub fn get_filename(&self) -> String {
+    pub fn get_filename(&mut self) -> String {
         self.filename.clone()
     }
 
-    pub fn get_bytes(&self) -> Vec<u8> {
+    pub fn get_bytes(&mut self) -> Vec<u8> {
         self.bytes.clone()
     }
 
-    pub fn get_chars(&self) -> Vec<char> {
+    pub fn get_chars(&mut self) -> Vec<char> {
         self.chars.clone()
     }
 
-    pub fn get_length(&self) -> usize {
+    pub fn get_length(&mut self) -> usize {
         self.length.clone()
+    }
+
+
+    pub fn set_byte(&mut self, value: u8, address: usize) {
+        self.bytes[address] = value;
+    }
+
+    pub fn set_char(&mut self, value: char, address: usize) {
+        self.chars[address] = value;
     }
 }

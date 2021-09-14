@@ -68,6 +68,6 @@ impl File {
 
     pub fn write(&mut self) {
         let mut f = fs::File::open(&self.filename).expect("no file found");
-        f.write_all(&(self.bytes.clone())[..]).unwrap();
+        f.write(&(self.bytes.clone())[..]).unwrap();
     }
 }

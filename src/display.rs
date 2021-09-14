@@ -149,6 +149,11 @@ impl Display {
         self.file.set_byte(new_value, offset.clone());
         self.file.set_char(new_value as char, offset);
     }
+
+
+    pub fn save_file(&mut self) {
+        self.file.write();
+    }
 }
 
 

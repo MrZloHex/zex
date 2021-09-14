@@ -328,8 +328,10 @@ fn main() -> Result<(), io::Error> {
 fn execute_command(command: String, state: &mut bool, command_state: &mut bool, display: &mut Display) {
     if command.eq(":q") {
         *state = false;
+    } else if command.eq(":w") {
+        display.save_file();
     } else if command.starts_with(":c") {
-        let new_value = match display.get_command().strip_prefix(":c").unwrap().parse::<u8>() {
+        let new_value = match command.strip_prefix(":c").unwrap().parse::<u8>() {
             Ok(u) => u,
             Err(_) => {
                 display.set_command("Incorrect value to write (from 0 to 255)".to_string());

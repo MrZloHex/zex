@@ -1,5 +1,5 @@
 use std::fs;
-use std::io::Read;
+use std::io::{Read, Write};
 
 #[derive(Clone)]
 pub struct File {
@@ -63,5 +63,11 @@ impl File {
 
     pub fn set_char(&mut self, value: char, address: usize) {
         self.chars[address] = value;
+    }
+
+
+    pub fn write(&mut self) {
+        let mut f = fs::File::open(&self.filename).expect("no file found");
+        f.write_all(&(self.bytes.clone())[..]).unwrap();
     }
 }

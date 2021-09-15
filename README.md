@@ -62,7 +62,7 @@ You can move arcoss dump with _Arrows_ or _Vim-like_ buttons:
 
 
 &nbsp;&nbsp;&nbsp;&nbsp;🡑&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;k</br>
-🡐&nbsp;&nbsp;&nbsp;🡒&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;h&nbsp;&nbsp;&nbsp;&nbsp;l</br>
+🡐&nbsp;&nbsp;&nbsp;&nbsp;🡒&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;h&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;l</br>
 &nbsp;&nbsp;&nbsp;&nbsp;🡓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j</br>
 
 

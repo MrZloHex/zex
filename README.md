@@ -65,6 +65,14 @@ You can move arcoss dump with _Arrows_ or _Vim-like_ buttons:
 🡐&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;🡒&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;h&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;l</br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;🡓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j</br>
 
+To return in __Normal Mode__ from another just push `esc`.
+
+### Command Mode
+
+__Command Mode__ is for executing commands which you are writing.</br>
+To enter in __Command Mode__ press `:`.
+
+Below is a list of available commands.
 
 ### Commands
 

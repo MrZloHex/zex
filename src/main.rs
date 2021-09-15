@@ -75,8 +75,13 @@ fn main() -> Result<(), io::Error> {
                 .constraints([Constraint::Percentage(96), Constraint::Percentage(4)].as_ref())
                 .split(frame.size());
 
+
+            let mode_title = match display.get_mode() {
+                InputMode::Editing => "Command",
+                InputMode::Normal => "Normal"
+            };
             let command_block = Block::default()
-                .title(Span::styled("Command", Style::default().fg(colors.tl())))
+                .title(Span::styled(mode_title, Style::default().fg(colors.tl())))
                 .borders(Borders::ALL)
                 .border_style(Style::default().fg(colors.bs()))
                 .style(Style::default().bg(colors.bg()));

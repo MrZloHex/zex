@@ -122,6 +122,11 @@ impl Display {
     }
 
 
+    pub fn get_mode(&mut self) -> InputMode {
+        self.input.clone()
+    }
+
+
 
     pub fn push_ch_command(&mut self, ch: char) {
         self.command.push(ch);

@@ -10,7 +10,7 @@ It's a HEX viewer, soon editor, maybe one day it will be a disassembler also.
  - [X] Hex viewer
  - [X] ASCII viewer
  - [ ] Command Line
- - [ ] Hex Editor
+ - [X] Hex Editor
  - [ ] ? Disassembler ?
 
 ## Deployment
@@ -51,6 +51,17 @@ Or see official [guide](https://github.com/rust-lang/cargo)
 
 ## Usage
 
-List of commands:
- - :q - quit
+ZEX have to modes to interact with file and hexadecimal view:
+ - Normal Mode
+ - Command Mode
+
+### Normal Mode
+
+
+
+### Commands
+
+| Mnemonic | Description   |
+|:--------:|:-------------:|
+| :q	   | Quit from zex |
 

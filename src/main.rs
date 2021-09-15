@@ -279,16 +279,16 @@ fn main() -> Result<(), io::Error> {
         for key in asi.by_ref().keys() {
             match display.input {
                 InputMode::Normal => match key.unwrap() {
-                    Key::Down => {
+                    Key::Down | Key::Char('j') => {
                         display.next_address();
                     }
-                    Key::Up => {
+                    Key::Up | Key::Char('k') => {
                         display.prev_address();
                     }
-                    Key::Right => {
+                    Key::Right | Key::Char('l') => {
                         display.next_offset();
                     }
-                    Key::Left => {
+                    Key::Left | Key::Char('h') => {
                         display.prev_offset();
                     }
                     Key::Char(':') => {

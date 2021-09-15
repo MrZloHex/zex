@@ -59,6 +59,7 @@ ZEX have to modes to interact with file and hexadecimal view:
 
 
 
+
 ### Commands
 
 | Mnemonic | Description   |

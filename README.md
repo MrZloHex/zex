@@ -78,8 +78,14 @@ __!!!__ For now, multiple commands as in Vim (e.g. `:wq` for saving and quiting 
 
 ### Commands
 
-| Mnemonic | Description   |
-|:--------:|:-------------:|
-| :q	   | Quit from zex |
+| Mnemonic    | Description   |
+|:-----------:|:-------------:|
+| :q	      | Quit from zex |
+| :w          | Save file     |
+| :c`<VALUE>` | Change choosen byte for `<VALULE>`<sup>[1](#VALUE)</sup> .
 
 
+
+## Footnotes
+
+<a name="VALUE">1</a>: For now, it available to set new value of byte only in __decimal__ base.</br>

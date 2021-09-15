@@ -74,7 +74,7 @@ To enter in __Command Mode__ press `:`.
 
 Below is a list of available commands.
 
-__!!!__ For now, multiple commands as in Vim (e.g. `:wq` for saving and quiting at same time) are unavailable.
+:bangbang: For now, multiple commands as in Vim (e.g. `:wq` for saving and quiting at same time) are unavailable.
 
 ### Commands
 
@@ -88,4 +88,4 @@ __!!!__ For now, multiple commands as in Vim (e.g. `:wq` for saving and quiting 
 
 ## Footnotes
 
-<a name="VALUE">1</a>: For now, it available to set new value of byte only in __decimal__ base.</br>
+<a name="VALUE">1</a>: For now, it is available to set new value of byte only in __decimal__ base.</br>

@@ -57,7 +57,12 @@ ZEX have to modes to interact with file and hexadecimal view:
 
 ### Normal Mode
 
+__Normal Mode__ is for viewing hex dump and ASCII tranclation of bytes.</br>
+You can move arcoss dump with _Arrows_ or _Vim-like_ buttons:
 
+  🡑         k</br>
+🡐  🡒     h   l</br>
+  🡓         j</br>
 
 
 ### Commands

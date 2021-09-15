@@ -74,9 +74,12 @@ To enter in __Command Mode__ press `:`.
 
 Below is a list of available commands.
 
+__!!!__ For now, multiple commands as in Vim (e.g. `:wq` for saving and quiting at same time) are unavailable.
+
 ### Commands
 
 | Mnemonic | Description   |
 |:--------:|:-------------:|
 | :q	   | Quit from zex |
+
 

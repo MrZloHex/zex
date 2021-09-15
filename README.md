@@ -61,9 +61,9 @@ __Normal Mode__ is for viewing hex dump and ASCII tranclation of bytes.</br>
 You can move arcoss dump with _Arrows_ or _Vim-like_ buttons:
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;🡑&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;k</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;🡑&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;k</br>
 🡐&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;🡒&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;h&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;l</br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;🡓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;🡓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j</br>
 
 
 ### Commands
